@@ -1,0 +1,35 @@
+{
+    "extends": "@vue/tsconfig/tsconfig.web.json",
+    "include": [
+        "env.d.ts",
+        "src/**/*",
+        "src/**/*.vue"
+    ],
+    "compilerOptions": {
+        "outDir": "build",
+        "sourceMap": true,
+        "types": [
+            "pinia-plugin-persist"
+        ],
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ],
+            "@components/*": [
+                "./src/components/*"
+            ],
+            "@pages/*": [
+                "./src/pages/*"
+            ],
+            "@store/*": [
+                "./src/stores/*"
+            ]
+        }
+    },
+    "references": [
+        {
+            "path": "./tsconfig.node.json"
+        }
+    ]
+}

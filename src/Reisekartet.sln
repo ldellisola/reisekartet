@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reisekartet.Core", "Reisekartet.Core\Reisekartet.Core.csproj", "{03C550F2-12D9-43DA-8F98-329F08EBF1C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reisekartet.Entities", "Reisekartet.Entities\Reisekartet.Entities.csproj", "{9EC6C3C9-9AB4-4155-9EF3-1AB054E9B783}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reisekartet.Api", "Reisekartet.Api\Reisekartet.Api.csproj", "{ABCDBD83-98B0-459C-B0F7-DD41D340B3BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{03C550F2-12D9-43DA-8F98-329F08EBF1C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03C550F2-12D9-43DA-8F98-329F08EBF1C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03C550F2-12D9-43DA-8F98-329F08EBF1C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03C550F2-12D9-43DA-8F98-329F08EBF1C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EC6C3C9-9AB4-4155-9EF3-1AB054E9B783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EC6C3C9-9AB4-4155-9EF3-1AB054E9B783}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EC6C3C9-9AB4-4155-9EF3-1AB054E9B783}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EC6C3C9-9AB4-4155-9EF3-1AB054E9B783}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABCDBD83-98B0-459C-B0F7-DD41D340B3BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABCDBD83-98B0-459C-B0F7-DD41D340B3BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABCDBD83-98B0-459C-B0F7-DD41D340B3BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABCDBD83-98B0-459C-B0F7-DD41D340B3BD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
