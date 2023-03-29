@@ -12,25 +12,23 @@ public sealed class DatabaseOptions
     /// A set of options for the database.
     /// </summary>
     /// <param name="ConnectionString">The database connection string</param>
-    /// <param name="EnableDetailedErrors">Whether the database will log errors with extra information.</param>
-    /// <param name="EnableSensitiveDataLogging">Whether the database will show sensitive data in the logs</param>
-    public DatabaseOptions(string ConnectionString,bool EnableDetailedErrors, bool EnableSensitiveDataLogging)
+    /// <param name="Database">The mongoDb database to use.</param>
+    public DatabaseOptions(string ConnectionString, string Database)
     {
         this.ConnectionString = ConnectionString;
-        this.EnableDetailedErrors = EnableDetailedErrors;
-        this.EnableSensitiveDataLogging = EnableSensitiveDataLogging;
+        this.Database = Database;
     }
 
+#pragma warning disable CS8618
     public DatabaseOptions(){}
+#pragma warning restore CS8618
 
     /// <summary>The database connection string</summary>
     public string ConnectionString { get; set; } = string.Empty;
 
-    /// <summary>Whether the database will log errors with extra information.</summary>
-    public bool EnableDetailedErrors { get; init; }
+    /// <summary>The mongoDb database to use.</summary>
+    public string Database { get; init; }
 
-    /// <summary>Whether the database will show sensitive data in the logs</summary>
-    public bool EnableSensitiveDataLogging { get; init; }
 
 }
 
