@@ -1,20 +1,20 @@
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using Reisekartet.Entities.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Reisekartet.Entities.Config;
 
-public class ReisekartetDbContext : DbContext
+public class ReisekartetDbContext
 {
-    public ReisekartetDbContext(DbContextOptions<ReisekartetDbContext> options)
-        : base(options)
+    private readonly IMongoDatabase _db;
+
+    public ReisekartetDbContext(IOptions<DatabaseOptions> mongoDbOptions)
     {
+        var options = mongoDbOptions.Value;
+        var client = new MongoClient(options.ConnectionString);
+        _db = client.GetDatabase(options.Database);
     }
 
-    public DbSet<User> Users => Set<User>();
+    internal IMongoCollection<Destination> Destinations => _db.GetCollection<Destination>("Destinations");
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ReisekartetDbContext).Assembly);
-    }
 }

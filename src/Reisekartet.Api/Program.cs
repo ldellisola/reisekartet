@@ -1,28 +1,30 @@
+using Reisekartet.Core.Config;
 using Reisekartet.Entities.Config;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.SlidingExpiration = true;
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-    });
+// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//     .AddCookie(options =>
+//     {
+//         options.SlidingExpiration = true;
+//         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+//     });
 
-builder.Services.AddAuthorization();
+// builder.Services.AddAuthorization();
 
-// builder.Services.AddReisekartetDbContext();
+builder.Services.AddReisekartetDbContext();
+builder.Services.AddCoreServices();
 
 builder.Services.AddGraphQLServer()
     .AddQueryType()
-    .AddAuthorization()
+    // .AddAuthorization()
     .AddApiTypes()
     .AddProjections()
     .AddFiltering()
     .AddSorting()
     .InitializeOnStartup()
+    .AddMutationConventions()
     ;
 
 var app = builder.Build();
@@ -30,10 +32,10 @@ var app = builder.Build();
 app.UseStaticFiles();
 app.UseRouting();
 
-app.UseAuthentication();
-app.UseAuthorization();
+// app.UseAuthentication();
+// app.UseAuthorization();
 
-// app.RunMigrations();
+//
 
 app.MapGraphQL("/api/graphql");
 

@@ -10,4 +10,12 @@
     <ProjectReference Include="..\Reisekartet.Entities\Reisekartet.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Riok.Mapperly" Version="2.7.0" />
+  </ItemGroup>
+
 </Project>
