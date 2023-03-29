@@ -10,7 +10,7 @@ import vuetify from "vite-plugin-vuetify";
 export default ({mode}) => {
     process.env = {...process.env, ...loadEnv(mode, process.cwd())};
     const target = process.env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${process.env.ASPNETCORE_HTTPS_PORT}` :
-        process.env.ASPNETCORE_URLS ? process.env.ASPNETCORE_URLS.split(';')[0] : 'http://localhost:37357';
+        process.env.ASPNETCORE_URLS ? process.env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:7288';
     return defineConfig({
         plugins: [
             vue(),
