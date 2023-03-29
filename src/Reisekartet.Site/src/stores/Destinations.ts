@@ -12,7 +12,7 @@ export const useDestinationStore = defineStore('Destinations', {
         hasError: (state) => state.error !== null,
     },
     actions: {
-        async get() {
+        async refresh() {
             const {data, error} = await getDestinations();
             
             if (error) {
@@ -22,8 +22,8 @@ export const useDestinationStore = defineStore('Destinations', {
             
             this.destinations = data.destinations;
         },
-        async create(name: string, latitude: number, longitude: number, website: string, type: DestinationType) {
-            const {data, errors} = await createDestination(name, latitude, longitude, website,type);
+        async create(destination : Destination) {
+            const {data, errors} = await createDestination(destination.name, destination.location.latitude, destination.location.longitude, destination.website, destination.type);
             if (errors && errors?.length > 0) {
                 this.error = errors[0].message;
                 return;
