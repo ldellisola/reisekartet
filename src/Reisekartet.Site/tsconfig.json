@@ -9,7 +9,8 @@
         "outDir": "build",
         "sourceMap": true,
         "types": [
-            "pinia-plugin-persist"
+            "pinia-plugin-persist",
+            "vue3-openlayers"
         ],
         "baseUrl": ".",
         "paths": {

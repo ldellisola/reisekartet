@@ -21,7 +21,7 @@ export const getDestinations = async () => {
 };
 
 
-export const createDestination = async (name: string, latitude: number, longitude: number, website: string, type: DestinationType) => {
+export const createDestination = async (name: string, latitude: number, longitude: number, website: string|null, type: DestinationType) => {
     const query = gql`
     mutation createDestination(
         $name: String!, 

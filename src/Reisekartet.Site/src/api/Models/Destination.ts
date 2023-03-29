@@ -8,5 +8,5 @@ export interface Destination {
     description: string;
     location: Point;
     type: DestinationType;
-    Website?: string;
+    website : string | null
 }

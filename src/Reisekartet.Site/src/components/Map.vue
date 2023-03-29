@@ -4,7 +4,9 @@
         ref="map"
         :loadTilesWhileAnimating="true"
         :loadTilesWhileInteracting="true"
-        style="height: 800px; width: 1600px;"
+        height="100%"
+        style="height: 800px; "
+        @singleclick="featureSelected"
     >
         <ol-view
             ref="view"
@@ -53,28 +55,35 @@
 
 <script lang="ts" setup>
 import { useDestinationStore } from "@store/Destinations";
-import {ref} from "vue";
+import {inject, ref} from "vue";
 import type {Point} from "@/api/Models/Point";
+import type {MapClickEvent} from "@/types/MapClickEvent";
+import {useDestinationEditorForm} from "@store/DestinationEditor.form";
 
+
+const destinationEditor = useDestinationEditorForm();
 const destinations = useDestinationStore();
 
-await destinations.get();
+await destinations.refresh();
 
 const center = ref([0, 0]);
 const zoom = ref(2);
 const rotation = ref(0);
 const projection = ref("EPSG:4326");
 
+const featureSelected = (event: MapClickEvent) => {
+    destinationEditor.latitude = String(event.coordinate[1]);
+    destinationEditor.longitude = String(event.coordinate[0]);
+};
+
+
 const transformCoordinates = (point: Point) => {
     return [point.longitude,point.latitude];
 }
 
 const overrideStyleFunction = (feature: any, style:any) => {
-
-    console.log(feature);   
     let clusteredFeatures = feature.get('features');
     let size = clusteredFeatures.length;
-
     style.getText().setText(size.toString());
 
 }
