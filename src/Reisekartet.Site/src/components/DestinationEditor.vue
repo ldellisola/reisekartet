@@ -6,17 +6,35 @@
         </v-card-title>
         <v-card-text>
         <v-container>
+
+            
             <v-row>
-                <v-text-field label="Name" v-model="form.name" />
+                <v-text-field 
+                    label="Name" 
+                    v-model="form.name"
+                    :error-messages="form.errors.name"
+                />
             </v-row>
             <v-row>
-                <v-text-field label="website" v-model="form.website" />
+                <v-text-field 
+                    label="website" 
+                    v-model="form.website" 
+                    :error-messages="form.errors.website"
+                />
             </v-row>
             <v-row>
-                <v-text-field label="latitude" v-model="form.latitude" />
+                <v-text-field 
+                    label="latitude" 
+                    v-model="form.latitude" 
+                    :error-messages="form.errors.latitude"
+                />
             </v-row>
             <v-row>
-                <v-text-field label="longitude" v-model="form.longitude" />
+                <v-text-field 
+                    label="longitude" 
+                    v-model="form.longitude" 
+                    :error-messages="form.errors.longitude"
+                />
             </v-row>
             <v-row>
                 <v-select
@@ -25,14 +43,15 @@
                     item-text="name"
                     item-value="id"
                     label="Type"
+                    :error-messages="form.errors.type"
                 ></v-select>
             </v-row>
             <v-row>
                 <v-btn
                     color="primary"
                     width="100%"
-                    :disabled="form.errors.length > 0"
-                    @click="save">Save</v-btn>
+                    :disabled="form.hasErrors()"
+                    @click="form.onSubmit">Save</v-btn>
             </v-row>
         </v-container>
         </v-card-text>
@@ -40,18 +59,9 @@
 </template>
 
 <script lang="ts" setup>
-
-import { useDestinationStore } from "@store/Destinations";
 import {useDestinationEditorForm} from "@store/DestinationEditor.form";
 
 const form = useDestinationEditorForm();
-
-const destinations = useDestinationStore();
-
-async function save() {
-    await destinations.create(form.destination);
-    form.reset();
-}
 
 </script>
 
