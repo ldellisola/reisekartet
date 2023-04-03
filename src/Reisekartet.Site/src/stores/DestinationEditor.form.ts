@@ -1,58 +1,110 @@
 import {defineStore} from "pinia";
 import type {Destination, DestinationType} from "@/api/Models/Destination";
+import {ref} from "vue";
+import {useForm} from "vee-validate";
+import * as Yup from "yup";
+import {useDestinationStore} from "@store/Destinations";
+import {assertWrappingType} from "graphql/type";
+
+interface DestinationEditorForm {
+        name: string;
+        latitude: string;
+        longitude: string;
+        website: string | null;
+        type: DestinationType;
+}
+
+const destinationTypes = ["Restaurant", "Hotel", "Attraction", "Nature", "Other"] as DestinationType[];
 
 
-export const useDestinationEditorForm = defineStore('DestinationsEditorForm', {
-    state: () => ({
-        name: '' as string,
-        latitude: '0',
-        longitude: '0',
-        website: '' as string | null,
-        type: '' as DestinationType,
-    }),
-    getters: {
-        destinationTypes: () => ["Restaurant" , "Hotel" , "Attraction" , "Nature" , "Other"],
-        errors: (state) => {
-            const errors: string[] = [];
-            if (state.name.length < 3) {
-                errors.push('Name is too short');
-            }
-            
-            const lat = Number.parseFloat(state.latitude);
-            if (isNaN(lat) || lat < -90 || lat > 90) {
-                errors.push('Latitude is invalid');
-            }
-            
-            const lon = Number.parseFloat(state.longitude);
-            if (isNaN(lon) || lon < -180 || lon > 180) {
-                errors.push('Longitude is invalid');
-            }
-            if (state.website && !state.website.startsWith('http')) {
-                errors.push('Website is invalid');
-            }
-            return errors;
-        },
-        destination: (state) : Destination => {
-            return {
-                description: "", 
-                id: "",
-                name: state.name,
-                location: {
-                    latitude: Number.parseFloat(state.latitude),
-                    longitude: Number.parseFloat(state.longitude),
-                },
-                website: state.website,
-                type: state.type
-            };
-        }
-    },
-    actions: {
-        reset() {
-            this.name = '';
-            this.latitude = '0';
-            this.longitude = '0';
-            this.website = null;
-            this.type = '' as DestinationType;
-        }
-    },
+const schema = Yup.object({
+        name: Yup.string().required(),
+        latitude: Yup.number().min(-90).max(90).required(),
+        longitude: Yup.number().min(-180).max(180).required(),
+        website: Yup.string().url().nullable(),
+        type: Yup.mixed<DestinationType>().oneOf(destinationTypes).required(),
+        
 })
+
+export const useDestinationEditorForm = defineStore('DestinationsEditorForm', () => {
+        const destinations = useDestinationStore();
+        const {errors, useFieldModel, handleSubmit} = useForm<DestinationEditorForm>(
+            {
+                    validationSchema: schema,
+                    initialValues: {
+                            name: '',
+                            latitude: '0',
+                            longitude: '0',
+                            website: null,
+                            type: '' as DestinationType,
+
+                    }
+                }
+        );
+        const [name, latitude, longitude, website, type] = useFieldModel(["name", "latitude", "longitude", "website", "type"]);
+        
+        const onSubmit = handleSubmit(async (values) => {
+                const destination: Destination = {
+                        description: "",
+                        id: null,
+                        location: {
+                                latitude: Number.parseFloat(values.latitude),
+                                longitude: Number.parseFloat(values.longitude),
+                        }, 
+                        name: values.name,
+                        type: values.type, 
+                        website: values.website
+                    }
+                ;
+                await destinations.create(destination);
+
+        });
+        
+        function hasErrors() : boolean {
+                return errors.value.name === undefined 
+                    || errors.value.latitude === undefined
+                    || errors.value.longitude === undefined
+                    || errors.value.website === undefined
+                    || errors.value.type === undefined ;
+        }
+        
+        return {
+                name,
+                latitude,
+                longitude,
+                website,
+                type,
+                destinationTypes,
+                errors,
+                onSubmit,
+                hasErrors
+        };
+    
+}
+
+//         destination: (state) : Destination => {
+//             return {
+//                 description: "", 
+//                 id: "",
+//                 name: state.name,
+//                 location: {
+//                     latitude: Number.parseFloat(state.latitude),
+//                     longitude: Number.parseFloat(state.longitude),
+//                 },
+//                 website: state.website,
+//                 type: state.type
+//             };
+//         }
+//     },
+//     actions: {
+//         reset() {
+//             this.name = '';
+//             this.latitude = '0';
+//             this.longitude = '0';
+//             this.website = null;
+//             this.type = '' as DestinationType;
+//         }
+//     },
+// }
+
+)
