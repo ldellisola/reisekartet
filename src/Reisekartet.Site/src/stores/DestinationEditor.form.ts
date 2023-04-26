@@ -14,7 +14,7 @@ interface DestinationEditorForm {
         type: DestinationType;
 }
 
-const destinationTypes = ["Restaurant", "Hotel", "Attraction", "Nature", "Other"] as DestinationType[];
+const destinationTypes = ["RESTAURANT", "HOTEL", "ATTRACTION", "NATURE", "OTHER"] as DestinationType[];
 
 
 const schema = Yup.object({
@@ -22,7 +22,7 @@ const schema = Yup.object({
         latitude: Yup.number().min(-90).max(90).required(),
         longitude: Yup.number().min(-180).max(180).required(),
         website: Yup.string().url().nullable(),
-        type: Yup.mixed<DestinationType>().oneOf(destinationTypes).required(),
+       
         
 })
 
@@ -61,11 +61,14 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
         });
         
         function hasErrors() : boolean {
-                return errors.value.name === undefined 
-                    || errors.value.latitude === undefined
-                    || errors.value.longitude === undefined
-                    || errors.value.website === undefined
-                    || errors.value.type === undefined ;
+            console.log(errors.value);
+            console.log(errors.value.name);
+            console.log(errors.value.latitude);
+            console.log(errors.value.longitude);
+            console.log(errors.value.website);
+            
+                return false;
+                    ;
         }
         
         return {

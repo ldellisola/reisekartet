@@ -29,10 +29,10 @@ export default ({mode}) => {
         server: {
             port: process.env.VITE_PORT ? Number.parseInt(process.env.VITE_PORT) : 3000,
             strictPort: true,
-            https: {
-                key: process.env.VITE_SSL_KEY_FILE,
-                cert: process.env.VITE_SSL_CRT_FILE
-            },
+            // https: {
+            //     key: process.env.VITE_SSL_KEY_FILE,
+            //     cert: process.env.VITE_SSL_CRT_FILE
+            // },
             proxy: {
                 '/api': {
                     target: target,
