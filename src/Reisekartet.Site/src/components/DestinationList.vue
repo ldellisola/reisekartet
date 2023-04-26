@@ -9,7 +9,7 @@
                         <v-list-item-title>{{d.name}}</v-list-item-title>
                         <v-list-item-subtitle>{{d.location.latitude}}, {{d.location.longitude}}</v-list-item-subtitle>
                     <v-list-item-action>
-                        <v-btn icon @click="destinations.delete(d.id)">
+                        <v-btn icon @click="destinations.delete(d.id as string)">
                             <v-icon>mdi-delete</v-icon>
                         </v-btn>
                     </v-list-item-action>

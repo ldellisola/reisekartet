@@ -43,7 +43,6 @@
                     item-text="name"
                     item-value="id"
                     label="Type"
-                    :error-messages="form.errors.type"
                 ></v-select>
             </v-row>
             <v-row>

@@ -13,6 +13,7 @@ export const getDestinations = async () => {
             }
             id
             website
+            type
         }
     }
     `;
@@ -49,6 +50,7 @@ export const createDestination = async (name: string, latitude: number, longitud
                 }
                 id
                 website
+                type
             }
         }
     }

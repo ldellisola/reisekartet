@@ -1,7 +1,7 @@
 import type {Point} from "@/api/Models/Point";
 
 
-export type DestinationType = "Restaurant" | "Hotel" | "Attraction" | "Nature" | "Other";
+export type DestinationType = "RESTAURANT" | "HOTEL" | "ATTRACTION" | "NATURE" | "OTHER";
 export interface Destination {
     id: string | null;
     name: string;
