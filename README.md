@@ -1,12 +1,7 @@
-# Reiserkartet
 <img src="./docs/images/reisekartet.png" width="200" height="200" alt="Reisekartet">
-## About
 
-Reiserkartet is an open-source project built with Vue 3 and .NET 7.
-
-## Requirements
-
-    Docker
+# Reiserkartet
+Reisekartet (The travel map) is an open source travel destination manager built with Vue 3 and .NET 7.
 
 ## Installation
 
@@ -17,12 +12,14 @@ docker compose up
 ```
 
 ## Contributing
-
-Fork the project.
-Create a new branch (`git checkout -b feature-branch`).
-Commit changes (`git commit -m 'Add feature'`).
-Push to origin (`git push origin feature-branch`).
-Create a new pull request.
+1. Install:
+    - dotnet 7
+    - bun or npm
+2. Fork the project.
+3. Create a new branch (`git checkout -b feature-branch`).
+4. Commit changes (`git commit -m 'Add feature'`).
+5. Push to origin (`git push origin feature-branch`).
+6. Create a new pull request.
 
 ## License
 
