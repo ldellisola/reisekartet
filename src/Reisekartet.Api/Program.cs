@@ -1,43 +1,21 @@
-using Reisekartet.Core.Config;
-using Reisekartet.Entities.Config;
+using FastEndpoints;
+using FastEndpoints.ClientGen;
+using FastEndpoints.Swagger;
+using Reisekartet.Persistence.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//     .AddCookie(options =>
-//     {
-//         options.SlidingExpiration = true;
-//         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-//     });
-
-// builder.Services.AddAuthorization();
-
+builder.Services
+    .AddFastEndpoints(t=> t.SourceGeneratorDiscoveredTypes.AddRange(Reisekartet.Api.DiscoveredTypes.All))
+    .SwaggerDocument();
 builder.Services.AddReisekartetDbContext();
-builder.Services.AddCoreServices();
-
-builder.Services.AddGraphQLServer()
-    .AddQueryType()
-    // .AddAuthorization()
-    .AddApiTypes()
-    .AddProjections()
-    .AddFiltering()
-    .AddSorting()
-    .InitializeOnStartup()
-    .AddMutationConventions()
-    ;
 
 var app = builder.Build();
 
-app.UseStaticFiles();
-app.UseRouting();
-
-// app.UseAuthentication();
-// app.UseAuthorization();
-
-//
-
-app.MapGraphQL("/api/graphql");
+app
+    .UseFastEndpoints(t=> t.Endpoints.RoutePrefix = "api")
+    .UseDefaultExceptionHandler()
+    .UseSwaggerGen();
 
 app.MapFallbackToFile("index.html");
 

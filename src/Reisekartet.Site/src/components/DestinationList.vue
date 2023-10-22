@@ -1,29 +1,21 @@
 <template>
-    <v-card>
-        <v-card-title>
-            Destinations
-        </v-card-title>
-        <v-card-text>
-            <v-list>
-                <v-list-item v-for="d in destinations.all" :key="d.id">
-                        <v-list-item-title>{{d.name}}</v-list-item-title>
-                        <v-list-item-subtitle>{{d.location.latitude}}, {{d.location.longitude}}</v-list-item-subtitle>
-                    <v-list-item-action>
-                        <v-btn icon @click="destinations.delete(d.id as string)">
-                            <v-icon>mdi-delete</v-icon>
-                        </v-btn>
-                    </v-list-item-action>
-                </v-list-item>
-            </v-list>
-        </v-card-text>
-    </v-card>
+  <v-data-table-virtual :headers="headers" :items="destinations.all" class="elevation-1">
+    <template v-slot:item.actions="{ item }">
+      <v-icon @click="destinations.remove(item.id)">mdi-delete</v-icon>
+    </template>
+  </v-data-table-virtual>
 </template>
 
 <script lang="ts" setup>
-import { useDestinationStore } from "@store/Destinations";
+import { useDestinationStore } from '@store/Destinations'
+const destinations = useDestinationStore()
+await destinations.refresh()
 
-const destinations = useDestinationStore();
-
+const headers = [
+  { title: 'Name', key: 'name' },
+  { title: 'Type', key: 'type' },
+  { title: 'Latitude', key: 'latitude' },
+  { title: 'Longitude', key: 'longitude' },
+  { title: 'Actions', key: 'actions', sortable: false }
+]
 </script>
-
-
