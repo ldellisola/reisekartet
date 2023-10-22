@@ -1,9 +1,5 @@
 # Reiserkartet
-
-```
-![Reiserkartet](docs/images/reiserkartet.png)
-```
-
+<img src="./docs/images/reisekartet.png" width="200" height="200" alt="Reisekartet">
 ## About
 
 Reiserkartet is an open-source project built with Vue 3 and .NET 7.
