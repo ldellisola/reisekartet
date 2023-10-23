@@ -1,0 +1,26 @@
+# Build dotnet backend
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build-backend
+WORKDIR /src
+COPY ./src/ ./
+
+RUN ls 
+RUN dotnet restore Reisekartet.sln
+RUN dotnet build -c Release --no-restore
+RUN dotnet publish -c Release -o out --no-restore
+
+# Build vue frontend with bun
+FROM oven/bun:1-alpine as build-frontend
+WORKDIR /src
+COPY ./src/Reisekartet.Site/ .
+
+RUN bun install
+RUN bunx --bun vite build
+
+# Runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine AS runtime
+WORKDIR /app
+COPY --from=build-backend /src/out ./
+COPY --from=build-frontend /src/dist ./wwwroot
+ENTRYPOINT ["dotnet", "Reisekartet.Site.dll"]
+
+
