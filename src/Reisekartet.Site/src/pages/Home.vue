@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <v-row justify="start">
+      <CreateDestination />
+    </v-row>
     <v-row>
       <v-col cols="3">
         <DestinationEditor />
@@ -22,4 +25,5 @@
 import Map from '@components/Map.vue'
 import DestinationEditor from '@components/DestinationEditor.vue'
 import DestinationList from '@components/DestinationList.vue'
+import CreateDestination from '@components/CreateDestination.vue'
 </script>
