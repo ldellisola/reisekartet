@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar style="padding: 10px">
+  <v-app-bar>
     <v-app-bar-nav-icon>
       <v-img
         style="margin-top: -7px"
