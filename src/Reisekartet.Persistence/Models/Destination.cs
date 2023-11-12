@@ -12,7 +12,7 @@ public class Destination
 
     public required GeoJsonPoint<GeoJson2DGeographicCoordinates> Location { get; set; }
 
-    public required string Type { get; set; }
+    public required string[] Tags { get; set; }
 
     public required string Name { get; set; }
 

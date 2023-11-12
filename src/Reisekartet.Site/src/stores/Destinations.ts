@@ -8,8 +8,15 @@ import { groupBy } from '@/lib/ArrayFunctions'
 export const useDestinationStore = defineStore('Destinations', () => {
   const errorStore = useErrorStore()
   const _destinations = ref<Destination[]>([])
-  const destinationTypes = computed(() => [...new Set(_destinations.value.map((d) => d.type))])
-  const byType = computed(() => groupBy(_destinations.value, (d) => d.type))
+  const destinationTypes = computed(() => [
+    ...new Set(
+      _destinations.value.reduce(
+        (accumulator, destination) => accumulator.concat(destination.tags),
+        [] as string[]
+      )
+    )
+  ])
+  const byType = computed(() => groupBy(_destinations.value, (d) => d.tags[0]))
 
   async function refresh() {
     const { data, error } = await getResource<{ destinations: Destination[] }>('/destinations')
@@ -22,7 +29,7 @@ export const useDestinationStore = defineStore('Destinations', () => {
 
   async function create(
     name: string,
-    type: string,
+    tags: string[],
     website: string | null,
     latitude: number,
     longitude: number,
@@ -31,7 +38,7 @@ export const useDestinationStore = defineStore('Destinations', () => {
   ): Promise<ReisekartetError | null> {
     const { error } = await postResource('/destinations', {
       name,
-      type,
+      tags,
       website,
       latitude,
       longitude,

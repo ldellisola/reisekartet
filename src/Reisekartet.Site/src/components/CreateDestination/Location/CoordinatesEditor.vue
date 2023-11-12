@@ -3,14 +3,16 @@
   <v-row>
     <v-col>
       <v-text-field
-        label="latitude"
+        variant="solo-inverted"
+        label="Latitude"
         v-model="form.latitude"
         :error-messages="form.errors.latitude"
       />
     </v-col>
     <v-col>
       <v-text-field
-        label="longitude"
+        variant="solo-inverted"
+        label="Longitude"
         v-model="form.longitude"
         :error-messages="form.errors.longitude"
       />

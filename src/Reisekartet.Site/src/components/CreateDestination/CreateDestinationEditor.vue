@@ -7,6 +7,7 @@ import { computed, ref } from 'vue'
 import { useDestinationEditorForm } from '@store/DestinationEditor.form'
 import Map from '@components/Mapping/Map.vue'
 import SingleDestinationLayer from '@components/Mapping/SingleDestinationLayer.vue'
+import { getColor } from '@/lib/StringFunctions'
 const destinationStore = useDestinationStore()
 const form = useDestinationEditorForm()
 
@@ -33,13 +34,19 @@ const props = defineProps({
   <v-container>
     <v-row>
       <v-col cols="6">
-        <v-text-field label="Name" v-model="form.name" :error-messages="form.errors.name" />
+        <v-text-field
+          variant="solo-inverted"
+          label="Name"
+          v-model="form.name"
+          :error-messages="form.errors.name"
+        />
       </v-col>
       <v-col cols="6">
         <v-text-field
-          label="website"
+          label="Website"
           v-model="form.website"
           :error-messages="form.errors.website"
+          variant="solo-inverted"
         />
       </v-col>
     </v-row>
@@ -58,17 +65,25 @@ const props = defineProps({
     <v-row>
       <v-col>
         <v-combobox
-          v-model="form.type"
+          v-model="form.tags"
           :items="destinationStore.destinationTypes"
-          label="Type"
-          :error-messages="form.errors.type"
-          :clearable="true"
+          label="Tags"
+          :error-messages="form.errors.tags"
+          clearable
+          chips
+          multiple
+          variant="solo-inverted"
         >
+          <template v-slot:chip="{ item, attrs, on }">
+            <v-chip :color="getColor(item.title)">
+              {{ item.title }}
+            </v-chip>
+          </template>
         </v-combobox>
       </v-col>
     </v-row>
     <div v-if="selectLocation">
-      <v-row justify="center">
+      <v-row justify="center" variant="outlined">
         <v-btn-toggle v-model="locationMethod">
           <v-btn value="coordinates">Coordinates</v-btn>
           <v-btn value="address">Address</v-btn>

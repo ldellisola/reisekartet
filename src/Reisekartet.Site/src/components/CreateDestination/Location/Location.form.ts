@@ -1,11 +1,11 @@
 import { object, number, string } from 'yup'
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
 import { useForm } from 'vee-validate'
-import isNullOrWhitespace from '@/lib/StringFunctions'
+import { isNullOrWhitespace } from '@/lib/StringFunctions'
 import { getResource } from '@/api/reisekartetClient'
 import type GeocodedLocation from '@/api/Models/GeocodedLocation'
 import type { PlaceLocation } from '@/api/Models/Destination'
+import { useErrorStore } from '@store/ErrorStore'
 
 export interface LocationForm {
   latitude: string | null
@@ -56,11 +56,16 @@ export const useLocationForm = defineStore('LocationForm', () => {
     return !isNullOrWhitespace(address.value) && errors.value.address === undefined
   }
 
-  const onSubmit = handleSubmit(async (values, { setErrors }) => {
-    if (hasCoordinates())
-      return await reverseGeocode(values.latitude!, values.longitude!, setErrors)
-    else if (hasAddress()) return await geocode(values.address!, setErrors)
-    else return false
+  const onSubmit = handleSubmit(async (values, { setErrors, resetForm }) => {
+    if (hasCoordinates()) {
+      const result = await reverseGeocode(values.latitude!, values.longitude!, setErrors)
+      resetForm()
+      return result
+    } else if (hasAddress()) {
+      const result = await geocode(values.address!, setErrors)
+      resetForm()
+      return result
+    } else return false
   })
 
   async function geocode(address: string, setErrors: Function) {
@@ -123,7 +128,6 @@ export const useLocationForm = defineStore('LocationForm', () => {
     city,
     country,
     onSubmit,
-    getLocation,
-    hasCoordinates
+    getLocation
   }
 })

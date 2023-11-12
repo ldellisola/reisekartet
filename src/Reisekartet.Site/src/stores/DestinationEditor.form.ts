@@ -3,17 +3,14 @@ import { useForm } from 'vee-validate'
 import * as Yup from 'yup'
 import { useDestinationStore } from '@store/Destinations'
 import type { PlaceLocation } from '@/api/Models/Destination'
-import { ref } from 'vue'
-import { getResource } from '@/api/reisekartetClient'
-import type GeocodedLocation from '@/api/Models/GeocodedLocation'
-import isNullOrWhitespace from '@/lib/StringFunctions'
+import { isNullOrWhitespace } from '@/lib/StringFunctions'
 
 export interface DestinationEditorForm {
   name: string
   latitude: string
   longitude: string
   website: string | null
-  type: string
+  tags: string[]
   city: string | null
   country: string | null
 }
@@ -24,6 +21,7 @@ const schema = Yup.object({
   longitude: Yup.number().min(-1000).max(1000).required(),
   website: Yup.string().nullable().url(),
   city: Yup.string().nullable(),
+  tags: Yup.array().of(Yup.string().required()).required(),
   country: Yup.string().nullable()
 })
 
@@ -33,29 +31,29 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
   const { errors, useFieldModel, handleSubmit } = useForm<DestinationEditorForm>({
     validationSchema: schema,
     initialValues: {
-      name: 'Test',
+      name: '',
       latitude: '',
       longitude: '',
       website: null,
-      type: 'Ttt',
+      tags: [] as string[],
       city: null,
       country: null
     }
   })
-  const [name, latitude, longitude, website, type, city, country] = useFieldModel([
+  const [name, latitude, longitude, website, tags, city, country] = useFieldModel([
     'name',
     'latitude',
     'longitude',
     'website',
-    'type',
+    'tags',
     'city',
     'country'
   ])
 
-  const onSubmit = handleSubmit(async (values, { setErrors }) => {
+  const onSubmit = handleSubmit(async (values, { setErrors, resetForm }) => {
     const error = await destinations.create(
       values.name,
-      values.type,
+      values.tags,
       values.website,
       Number.parseFloat(values.latitude),
       Number.parseFloat(values.longitude),
@@ -66,21 +64,11 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
       console.error(error)
       setErrors(error.errors)
     } else {
-      clear()
+      resetForm()
     }
 
     return error === null
   })
-
-  function clear() {
-    name.value = ''
-    latitude.value = '0'
-    longitude.value = '0'
-    website.value = null
-    type.value = ''
-    city.value = null
-    country.value = null
-  }
 
   function setCords(
     _latitude: string,
@@ -97,8 +85,8 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
   function getLocation(): PlaceLocation | null {
     console.debug('getLocation')
     if (
-      isNullOrWhitespace(latitude.value) ||
-      isNullOrWhitespace(longitude.value) ||
+      isNullOrWhitespace(latitude.value as string | null) ||
+      isNullOrWhitespace(longitude.value as string | null) ||
       errors.value.latitude !== undefined ||
       errors.value.longitude !== undefined
     ) {
@@ -111,8 +99,8 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
     }
 
     return {
-      latitude: Number.parseFloat(latitude.value!),
-      longitude: Number.parseFloat(longitude.value!)
+      latitude: Number.parseFloat(latitude.value as string),
+      longitude: Number.parseFloat(longitude.value as string)
     }
   }
 
@@ -121,13 +109,12 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
     latitude,
     longitude,
     website,
-    type,
+    tags,
     city,
     country,
     errors,
     onSubmit,
     setCords,
-    clear,
     getLocation
   }
 })

@@ -11,7 +11,7 @@ internal sealed class Mapper : ResponseMapper<Response, IEnumerable<Destination>
                     t.Id!,
                     t.Name,
                     t.Website,
-                    t.Type,
+                    t.Tags,
                     t.Location.Coordinates.Latitude,
                     t.Location.Coordinates.Longitude
                 )

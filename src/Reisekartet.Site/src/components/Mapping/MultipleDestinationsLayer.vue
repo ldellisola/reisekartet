@@ -32,6 +32,7 @@
 <script lang="ts" setup>
 import type { PlaceLocation } from '@/api/Models/Destination'
 import { transform } from 'ol/proj.js'
+import { getColor } from '@/lib/StringFunctions'
 const props = defineProps<{
   destinations: PlaceLocation[]
   type: string
@@ -47,19 +48,4 @@ const overrideStyleFunction = (feature: any, style: any) => {
 }
 
 const color = getColor(props.type)
-
-function getColor(str: string): string {
-  let hash = 0
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash)
-  }
-
-  let color = '#'
-  for (let i = 0; i < 3; i++) {
-    const value = (hash >> (i * 8)) & 0xff
-    color += ('00' + value.toString(16)).slice(-2)
-  }
-
-  return color
-}
 </script>
