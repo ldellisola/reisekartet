@@ -3,7 +3,7 @@ using Reisekartet.Persistence.Config;
 
 namespace Reisekartet.Api.Features.Destinations.CreateDestination;
 
-internal class Endpoint: EndpointWithMapper<Request,Mapper>
+internal sealed class Endpoint: EndpointWithMapper<Request,Mapper>
 {
     private readonly ReisekartetDbContext _db;
 

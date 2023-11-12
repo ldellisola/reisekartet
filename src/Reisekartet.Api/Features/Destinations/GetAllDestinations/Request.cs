@@ -1,3 +1,3 @@
 namespace Reisekartet.Api.Features.Destinations.GetAllDestinations;
 
-internal record Request();
+internal sealed record Request;

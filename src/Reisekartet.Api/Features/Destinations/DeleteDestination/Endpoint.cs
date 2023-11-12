@@ -5,7 +5,7 @@ using Reisekartet.Persistence.Models;
 
 namespace Reisekartet.Api.Features.Destinations.DeleteDestination;
 
-internal class Endpoint: Endpoint<Request>
+internal sealed class Endpoint: Endpoint<Request>
 {
     private readonly ReisekartetDbContext _db;
 
