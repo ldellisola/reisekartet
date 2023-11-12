@@ -8,8 +8,8 @@ export const useCreateDestinationDialog = defineStore('CreateDestinationForm', (
   const currentStep = ref(1)
   const isLoading = ref(false)
   const isOpen = ref(false)
-  let nextButtonLabel = 'Next'
   const previousButtonLabel = computed(() => (currentStep.value > 1 ? 'Previous' : 'Cancel'))
+  const nextButtonLabel = computed(() => (currentStep.value < steps.length ? 'Next' : 'Create'))
 
   const locationForm = useLocationForm()
   const destinationForm = useDestinationEditorForm()

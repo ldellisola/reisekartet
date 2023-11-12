@@ -1,7 +1,12 @@
 <template>
   <v-row>
     <v-col>
-      <v-text-field label="Address" v-model="form.address" :error-messages="form.errors.address" />
+      <v-text-field
+        variant="solo-inverted"
+        label="Address"
+        v-model="form.address"
+        :error-messages="form.errors.address"
+      />
     </v-col>
   </v-row>
 </template>

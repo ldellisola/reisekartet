@@ -6,7 +6,7 @@ namespace Reisekartet.Api.Features.Destinations.CreateDestination;
 internal sealed record Request(
      string Name,
      string? Website,
-     string Type,
+     string[] Tags,
      double Latitude,
      double Longitude,
      string? City,
@@ -31,11 +31,17 @@ internal sealed class RequestValidator : Validator<Request>
             .Matches(@"^https?://")
             .WithMessage("Website must be a valid URL");
 
-        RuleFor(t => t.Type)
+        RuleFor(t => t.Tags)
             .NotEmpty()
-            .WithMessage("Type is required")
-            .MaximumLength(200)
-            .WithMessage("Type must be at most 200 characters long");
+            .WithMessage("Tags are required")
+            .ForEach(t =>
+                t.NotEmpty()
+                    .WithMessage("Tag cannot be empty")
+                    .MinimumLength(3)
+                    .WithMessage("Tag must be at least 3 characters long")
+                    .MaximumLength(50)
+                    .WithMessage("Tag must be at most 50 characters long")
+            );
 
         RuleFor(t => t.Latitude)
             .InclusiveBetween(-90, 90)

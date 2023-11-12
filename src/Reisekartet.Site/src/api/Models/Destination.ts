@@ -6,6 +6,6 @@ export interface PlaceLocation {
 export interface Destination extends PlaceLocation {
   id: string
   name: string
-  type: string
+  tags: string[]
   website: string | null
 }

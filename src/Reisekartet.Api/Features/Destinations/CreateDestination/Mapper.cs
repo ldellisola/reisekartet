@@ -11,7 +11,7 @@ internal sealed class Mapper : RequestMapper<Request, Destination>
         {
             Name = r.Name,
             Location = new GeoJsonPoint<GeoJson2DGeographicCoordinates>(new GeoJson2DGeographicCoordinates(r.Longitude, r.Latitude)),
-            Type = r.Type,
+            Tags = r.Tags,
             Website = r.Website,
             City = r.City,
             Country = r.Country

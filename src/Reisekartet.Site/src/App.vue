@@ -18,6 +18,6 @@ import Error from '@components/Error.vue'
 
 <style scoped>
 .v-main {
-  margin-top: 20px;
+  margin-top: 15px;
 }
 </style>

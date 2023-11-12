@@ -23,7 +23,6 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue'
 import { transform } from 'ol/proj.js'
 
 defineProps({
@@ -42,7 +41,6 @@ defineProps({
   projection: {
     type: String,
     default: 'EPSG:3857'
-    // default: 'EPSG:4326'
   }
 })
 </script>
