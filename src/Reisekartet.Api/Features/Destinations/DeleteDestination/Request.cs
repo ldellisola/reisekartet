@@ -4,9 +4,9 @@ using MongoDB.Bson;
 
 namespace Reisekartet.Api.Features.Destinations.DeleteDestination;
 
-internal record Request(string Id);
+internal sealed record Request(string Id);
 
-internal class RequestValidator : Validator<Request>
+internal sealed class RequestValidator : Validator<Request>
 {
     public RequestValidator()
     {

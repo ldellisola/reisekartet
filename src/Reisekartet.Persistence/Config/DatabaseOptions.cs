@@ -11,12 +11,12 @@ public sealed class DatabaseOptions
     /// <summary>
     /// A set of options for the database.
     /// </summary>
-    /// <param name="ConnectionString">The database connection string</param>
-    /// <param name="Database">The mongoDb database to use.</param>
-    public DatabaseOptions(string ConnectionString, string Database)
+    /// <param name="connectionString">The database connection string</param>
+    /// <param name="database">The mongoDb database to use.</param>
+    public DatabaseOptions(string connectionString, string database)
     {
-        this.ConnectionString = ConnectionString;
-        this.Database = Database;
+        this.ConnectionString = connectionString;
+        this.Database = database;
     }
 
 #pragma warning disable CS8618

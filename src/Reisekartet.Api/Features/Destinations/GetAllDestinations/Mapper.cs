@@ -3,7 +3,7 @@ using Reisekartet.Persistence.Models;
 
 namespace Reisekartet.Api.Features.Destinations.GetAllDestinations;
 
-internal class Mapper : ResponseMapper<Response, IEnumerable<Destination>>
+internal sealed class Mapper : ResponseMapper<Response, IEnumerable<Destination>>
 {
     public override Response FromEntity(IEnumerable<Destination> e) =>
         new(

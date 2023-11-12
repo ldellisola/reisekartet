@@ -8,13 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="FastEndpoints" Version="5.18.0" />
-      <PackageReference Include="FastEndpoints.ClientGen" Version="5.18.0" />
-      <PackageReference Include="FastEndpoints.Generator" Version="5.18.0">
+      <PackageReference Include="FastEndpoints" Version="5.19.2" />
+      <PackageReference Include="FastEndpoints.Generator" Version="5.19.0">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="FastEndpoints.Swagger" Version="5.18.0" />
+      <PackageReference Include="FastEndpoints.Swagger" Version="5.19.2" />
+      <PackageReference Include="Geo.Bing" Version="1.5.2" />
       <PackageReference Include="Riok.Mapperly" Version="3.2.0" />
     </ItemGroup>
 

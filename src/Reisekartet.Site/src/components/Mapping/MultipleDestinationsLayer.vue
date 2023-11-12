@@ -4,8 +4,8 @@
       <ol-source-vector>
         <ol-feature
           v-for="destination in destinations"
-          :key="destination.id"
-          :properties="{ type: destination.type }"
+          :key="destination.latitude * 2 + destination.longitude * 3"
+          :properties="{ type: type }"
         >
           <ol-geom-point
             :coordinates="transformCoordinates(destination.longitude, destination.latitude)"
@@ -30,14 +30,14 @@
 </template>
 
 <script lang="ts" setup>
-import type { Destination } from '@/api/Models/Destination'
-
+import type { PlaceLocation } from '@/api/Models/Destination'
+import { transform } from 'ol/proj.js'
 const props = defineProps<{
-  destinations: Destination[]
+  destinations: PlaceLocation[]
   type: string
 }>()
 const transformCoordinates = (longitude: number, latitude: number) => {
-  return [longitude, latitude]
+  return transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857')
 }
 
 const overrideStyleFunction = (feature: any, style: any) => {

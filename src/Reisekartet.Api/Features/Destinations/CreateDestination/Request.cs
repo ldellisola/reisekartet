@@ -3,15 +3,17 @@ using FluentValidation;
 
 namespace Reisekartet.Api.Features.Destinations.CreateDestination;
 
-internal record Request(
+internal sealed record Request(
      string Name,
-    string? Website,
-   string Type,
-    double Latitude,
-    double Longitude
+     string? Website,
+     string Type,
+     double Latitude,
+     double Longitude,
+     string? City,
+     string? Country
 );
 
-internal class RequestValidator : Validator<Request>
+internal sealed class RequestValidator : Validator<Request>
 {
     public RequestValidator()
     {
@@ -42,6 +44,12 @@ internal class RequestValidator : Validator<Request>
         RuleFor(t => t.Longitude)
             .InclusiveBetween(-180, 180)
             .WithMessage("Longitude must be between -180 and 180");
+
+        RuleFor(t=> t.City)
+            .MaximumLength(200).WithMessage("City must be at most 200 characters long");
+
+        RuleFor(t=> t.Country)
+            .MaximumLength(200).WithMessage("Country must be at most 200 characters long");
     }
 }
 

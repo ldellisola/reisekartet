@@ -3,10 +3,13 @@ import type { Destination } from '@/api/Models/Destination'
 import { useErrorStore } from './ErrorStore'
 import type { ReisekartetError } from '@/api/reisekartetClient'
 import { deleteResource, getResource, postResource } from '@/api/reisekartetClient'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { groupBy } from '@/lib/ArrayFunctions'
 export const useDestinationStore = defineStore('Destinations', () => {
   const errorStore = useErrorStore()
   const _destinations = ref<Destination[]>([])
+  const destinationTypes = computed(() => [...new Set(_destinations.value.map((d) => d.type))])
+  const byType = computed(() => groupBy(_destinations.value, (d) => d.type))
 
   async function refresh() {
     const { data, error } = await getResource<{ destinations: Destination[] }>('/destinations')
@@ -22,14 +25,18 @@ export const useDestinationStore = defineStore('Destinations', () => {
     type: string,
     website: string | null,
     latitude: number,
-    longitude: number
+    longitude: number,
+    city: string | null,
+    country: string | null
   ): Promise<ReisekartetError | null> {
     const { error } = await postResource('/destinations', {
       name,
       type,
       website,
       latitude,
-      longitude
+      longitude,
+      city,
+      country
     })
 
     if (error && error.statusCode !== 400) {
@@ -57,6 +64,8 @@ export const useDestinationStore = defineStore('Destinations', () => {
 
   return {
     all: _destinations,
+    byType,
+    destinationTypes,
     refresh,
     create,
     remove
