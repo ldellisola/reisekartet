@@ -20,7 +20,7 @@
             ></v-progress-circular>
           </v-overlay>
 
-          <div class="d-flex flex-column bg-grey-lighten-4">
+          <div class="d-flex flex-column">
             <CreateDestinationEditor reduced-fields select-location />
           </div>
         </template>

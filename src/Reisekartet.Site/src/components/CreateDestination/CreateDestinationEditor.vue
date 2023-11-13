@@ -3,7 +3,7 @@
 import CoordinatesEditor from '@components/CreateDestination/Location/CoordinatesEditor.vue'
 import AddressEditor from '@components/CreateDestination/Location/AddressEditor.vue'
 import { useDestinationStore } from '@store/Destinations'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useDestinationEditorForm } from '@store/DestinationEditor.form'
 import Map from '@components/Mapping/Map.vue'
 import SingleDestinationLayer from '@components/Mapping/SingleDestinationLayer.vue'
@@ -54,12 +54,18 @@ const props = defineProps({
     </v-row>
     <v-row v-if="!reducedFields">
       <v-col cols="6">
-        <v-text-field label="City" v-model="form.city" :error-messages="form.errors.city" />
+        <v-text-field
+          label="City"
+          v-model="form.city"
+          variant="solo-inverted"
+          :error-messages="form.errors.city"
+        />
       </v-col>
       <v-col cols="6">
         <v-text-field
           label="Country"
           v-model="form.country"
+          variant="solo-inverted"
           :error-messages="form.errors.country"
         />
       </v-col>
