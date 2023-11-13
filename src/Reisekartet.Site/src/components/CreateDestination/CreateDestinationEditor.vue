@@ -3,15 +3,17 @@
 import CoordinatesEditor from '@components/CreateDestination/Location/CoordinatesEditor.vue'
 import AddressEditor from '@components/CreateDestination/Location/AddressEditor.vue'
 import { useDestinationStore } from '@store/Destinations'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useDestinationEditorForm } from '@store/DestinationEditor.form'
 import Map from '@components/Mapping/Map.vue'
 import SingleDestinationLayer from '@components/Mapping/SingleDestinationLayer.vue'
 import { getColor } from '@/lib/StringFunctions'
+import GoogleMapsLinkEditor from '@components/CreateDestination/Location/GoogleMapsLinkEditor.vue'
+import { useLocationForm } from '@components/CreateDestination/Location/Location.form'
 const destinationStore = useDestinationStore()
 const form = useDestinationEditorForm()
+const locationForm = useLocationForm()
 
-const locationMethod = ref('coordinates')
 const location = computed(() => form.getLocation())
 
 const props = defineProps({
@@ -52,12 +54,18 @@ const props = defineProps({
     </v-row>
     <v-row v-if="!reducedFields">
       <v-col cols="6">
-        <v-text-field label="City" v-model="form.city" :error-messages="form.errors.city" />
+        <v-text-field
+          label="City"
+          v-model="form.city"
+          variant="solo-inverted"
+          :error-messages="form.errors.city"
+        />
       </v-col>
       <v-col cols="6">
         <v-text-field
           label="Country"
           v-model="form.country"
+          variant="solo-inverted"
           :error-messages="form.errors.country"
         />
       </v-col>
@@ -84,13 +92,17 @@ const props = defineProps({
     </v-row>
     <div v-if="selectLocation">
       <v-row justify="center" variant="outlined">
-        <v-btn-toggle v-model="locationMethod">
+        <v-btn-toggle v-model="locationForm.mode">
           <v-btn value="coordinates">Coordinates</v-btn>
           <v-btn value="address">Address</v-btn>
+          <v-btn value="googleMapsLink">Google Maps Link</v-btn>
         </v-btn-toggle>
       </v-row>
-      <CoordinatesEditor v-if="locationMethod === 'coordinates'" />
-      <AddressEditor v-else-if="locationMethod === 'address'" />
+      <CoordinatesEditor v-if="locationForm.mode === 'coordinates'" />
+      <AddressEditor v-else-if="locationForm.mode === 'address'" />
+      <GoogleMapsLinkEditor
+        v-else-if="locationForm.mode === 'googleMapsLink'"
+      ></GoogleMapsLinkEditor>
     </div>
     <v-row v-if="showMap">
       <Map

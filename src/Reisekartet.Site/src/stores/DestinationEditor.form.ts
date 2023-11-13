@@ -28,7 +28,7 @@ const schema = Yup.object({
 export const useDestinationEditorForm = defineStore('DestinationsEditorForm', () => {
   const destinations = useDestinationStore()
 
-  const { errors, useFieldModel, handleSubmit } = useForm<DestinationEditorForm>({
+  const { errors, useFieldModel, handleSubmit, resetForm } = useForm<DestinationEditorForm>({
     validationSchema: schema,
     initialValues: {
       name: '',
@@ -83,18 +83,12 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
   }
 
   function getLocation(): PlaceLocation | null {
-    console.debug('getLocation')
     if (
       isNullOrWhitespace(latitude.value as string | null) ||
       isNullOrWhitespace(longitude.value as string | null) ||
       errors.value.latitude !== undefined ||
       errors.value.longitude !== undefined
     ) {
-      console.debug('getLocation: invalid')
-      console.debug(latitude.value)
-      console.debug(longitude.value)
-      console.debug(errors.value.latitude)
-      console.debug(errors.value.longitude)
       return null
     }
 
@@ -115,6 +109,7 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
     errors,
     onSubmit,
     setCords,
-    getLocation
+    getLocation,
+    resetForm
   }
 })

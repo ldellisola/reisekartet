@@ -3,9 +3,9 @@
     <v-col>
       <v-text-field
         variant="solo-inverted"
-        label="Address"
-        v-model="form.address"
-        :error-messages="form.errors.address"
+        label="Google Maps Link"
+        v-model="form.googleMapsLink"
+        :error-messages="form.errors.googleMapsLink"
       />
     </v-col>
   </v-row>
