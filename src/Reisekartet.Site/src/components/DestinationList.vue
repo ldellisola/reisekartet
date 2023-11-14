@@ -20,6 +20,8 @@ await destinations.refresh()
 const headers = [
   { title: 'Name', key: 'name' },
   { title: 'Tags', key: 'tags' },
+  { title: 'City', key: 'city' },
+  { title: 'Country', key: 'country' },
   { title: 'Latitude', key: 'latitude' },
   { title: 'Longitude', key: 'longitude' },
   { title: 'Actions', key: 'actions', sortable: false }

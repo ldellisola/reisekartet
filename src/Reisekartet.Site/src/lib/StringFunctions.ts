@@ -17,3 +17,13 @@ export function getColor(str: string): string {
 
   return color
 }
+
+export function containsIgnoreCase(
+  a: string | null | undefined,
+  b: string | null | undefined
+): boolean {
+  if (isNullOrWhitespace(a) && isNullOrWhitespace(b)) return true
+  if (isNullOrWhitespace(b)) return true
+  if (isNullOrWhitespace(a)) return false
+  return a!.toLocaleLowerCase().includes(b!.toLocaleLowerCase())
+}
