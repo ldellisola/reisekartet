@@ -1,8 +1,16 @@
 <template>
   <v-container>
-    <v-row style="margin-left: 0px">
-      <v-col>
+    <v-row align="end" justify="space-between" style="margin-left: 0; margin-right: 0">
+      <v-col cols="2">
         <CreateDestination justify="start" />
+      </v-col>
+
+      <v-col
+        cols="2"
+        style="padding-bottom: 0; padding-top: 0; padding-right: 0"
+        class="text-right"
+      >
+        <Filters />
       </v-col>
     </v-row>
     <v-row>
@@ -34,5 +42,6 @@ import DestinationList from '@components/DestinationList.vue'
 import CreateDestination from '@components/CreateDestination/CreateDestinationDialog.vue'
 import DestinationLayer from '@components/Mapping/MultipleDestinationsLayer.vue'
 import { useDestinationStore } from '@store/Destinations'
+import Filters from '@components/Filters/FiltersDialog.vue'
 const destinations = useDestinationStore()
 </script>
