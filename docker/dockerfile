@@ -7,7 +7,7 @@ COPY ./src/Reisekartet.Persistence/ ./Reisekartet.Persistence/
 
 RUN dotnet restore Reisekartet.sln
 RUN dotnet build -c Release --no-restore
-RUN dotnet publish ./Reisekartet.Api/Reisekartet.Api.csproj -c Release --no-restore --no-build
+RUN dotnet publish ./Reisekartet.Api/Reisekartet.Api.csproj -o out -c Release --no-restore --no-build
 
 # Build vue frontend with bun
 FROM oven/bun:1-alpine as build-frontend
