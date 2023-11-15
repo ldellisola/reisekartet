@@ -1,12 +1,13 @@
 # Build dotnet backend
-FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build-backend
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build-backend
 WORKDIR /src
-COPY ./src/ ./
+COPY ./src/Reisekartet.sln .
+COPY ./src/Reisekartet.Api ./Reisekartet.Api/
+COPY ./src/Reisekartet.Persistence/ ./Reisekartet.Persistence/
 
-RUN ls 
 RUN dotnet restore Reisekartet.sln
 RUN dotnet build -c Release --no-restore
-RUN dotnet publish -c Release -o out --no-restore
+RUN dotnet publish ./Reisekartet.Api/Reisekartet.Api.csproj -c Release --no-restore --no-build
 
 # Build vue frontend with bun
 FROM oven/bun:1-alpine as build-frontend
@@ -17,7 +18,7 @@ RUN bun install
 RUN bunx --bun vite build
 
 # Runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
 COPY --from=build-backend /src/out ./
 COPY --from=build-frontend /src/dist ./wwwroot
