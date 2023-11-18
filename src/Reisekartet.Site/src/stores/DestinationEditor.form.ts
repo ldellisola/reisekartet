@@ -13,6 +13,7 @@ export interface DestinationEditorForm {
   tags: string[]
   city: string | null
   country: string | null
+  description: string | null
 }
 
 const schema = Yup.object({
@@ -22,7 +23,8 @@ const schema = Yup.object({
   website: Yup.string().nullable().url(),
   city: Yup.string().nullable(),
   tags: Yup.array().of(Yup.string().required()).required(),
-  country: Yup.string().nullable()
+  country: Yup.string().nullable(),
+  description: Yup.string().nullable()
 })
 
 export const useDestinationEditorForm = defineStore('DestinationsEditorForm', () => {
@@ -37,17 +39,19 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
       website: null,
       tags: [] as string[],
       city: null,
-      country: null
+      country: null,
+      description: null
     }
   })
-  const [name, latitude, longitude, website, tags, city, country] = useFieldModel([
+  const [name, latitude, longitude, website, tags, city, country, description] = useFieldModel([
     'name',
     'latitude',
     'longitude',
     'website',
     'tags',
     'city',
-    'country'
+    'country',
+    'description'
   ])
 
   const onSubmit = handleSubmit(async (values, { setErrors, resetForm }) => {
@@ -58,7 +62,8 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
       Number.parseFloat(values.latitude),
       Number.parseFloat(values.longitude),
       values.city,
-      values.country
+      values.country,
+      values.description
     )
     if (error) {
       console.error(error)
@@ -106,6 +111,7 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
     tags,
     city,
     country,
+    description,
     errors,
     onSubmit,
     setCords,

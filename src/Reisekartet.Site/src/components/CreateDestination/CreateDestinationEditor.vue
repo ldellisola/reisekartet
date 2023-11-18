@@ -34,62 +34,79 @@ const props = defineProps({
 
 <template>
   <v-container>
-    <v-row>
+    <v-row style="margin-bottom: 10px">
       <v-col cols="6">
-        <v-text-field
-          variant="solo-inverted"
-          label="Name"
-          v-model="form.name"
-          :error-messages="form.errors.name"
-        />
+        <v-row>
+          <v-col>
+            <v-text-field
+              variant="solo-inverted"
+              label="Name"
+              v-model="form.name"
+              :error-messages="form.errors.name"
+            />
+          </v-col>
+          <v-col>
+            <v-text-field
+              label="Website"
+              v-model="form.website"
+              :error-messages="form.errors.website"
+              variant="solo-inverted"
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-combobox
+              v-model="form.tags"
+              :items="destinationStore.destinationTypes"
+              label="Tags"
+              :error-messages="form.errors.tags"
+              clearable
+              chips
+              multiple
+              variant="solo-inverted"
+            >
+              <template v-slot:chip="{ item, attrs, on }">
+                <v-chip :color="getColor(item.title)">
+                  {{ item.title }}
+                </v-chip>
+              </template>
+            </v-combobox>
+          </v-col>
+        </v-row>
+        <v-row v-if="!reducedFields">
+          <v-col cols="6">
+            <v-text-field
+              label="City"
+              v-model="form.city"
+              variant="solo-inverted"
+              :error-messages="form.errors.city"
+            />
+          </v-col>
+          <v-col cols="6">
+            <v-text-field
+              label="Country"
+              v-model="form.country"
+              variant="solo-inverted"
+              :error-messages="form.errors.country"
+            />
+          </v-col>
+        </v-row>
       </v-col>
-      <v-col cols="6">
-        <v-text-field
-          label="Website"
-          v-model="form.website"
-          :error-messages="form.errors.website"
-          variant="solo-inverted"
-        />
-      </v-col>
-    </v-row>
-    <v-row v-if="!reducedFields">
-      <v-col cols="6">
-        <v-text-field
-          label="City"
-          v-model="form.city"
-          variant="solo-inverted"
-          :error-messages="form.errors.city"
-        />
-      </v-col>
-      <v-col cols="6">
-        <v-text-field
-          label="Country"
-          v-model="form.country"
-          variant="solo-inverted"
-          :error-messages="form.errors.country"
-        />
-      </v-col>
-    </v-row>
-    <v-row>
       <v-col>
-        <v-combobox
-          v-model="form.tags"
-          :items="destinationStore.destinationTypes"
-          label="Tags"
-          :error-messages="form.errors.tags"
-          clearable
-          chips
-          multiple
+        <v-textarea
+          v-model="form.description"
+          label="Description"
           variant="solo-inverted"
-        >
-          <template v-slot:chip="{ item, attrs, on }">
-            <v-chip :color="getColor(item.title)">
-              {{ item.title }}
-            </v-chip>
-          </template>
-        </v-combobox>
+          class="fill-height"
+          :hide-details="true"
+          auto-grow
+          :rows="reducedFields ? 4 : 8"
+          :error-messages="form.errors.description"
+        />
       </v-col>
     </v-row>
+
     <div v-if="selectLocation">
       <v-row justify="center" variant="outlined">
         <v-btn-toggle v-model="locationForm.mode">
@@ -120,6 +137,6 @@ const props = defineProps({
 <style scoped>
 .v-col {
   padding-bottom: 0;
-  padding-top: 0;
+  padding-top: 12px;
 }
 </style>

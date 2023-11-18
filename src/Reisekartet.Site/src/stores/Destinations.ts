@@ -57,7 +57,8 @@ export const useDestinationStore = defineStore('Destinations', () => {
     latitude: number,
     longitude: number,
     city: string | null,
-    country: string | null
+    country: string | null,
+    description: string | null
   ): Promise<ReisekartetError | null> {
     const { error } = await postResource('/destinations', {
       name,
@@ -66,7 +67,8 @@ export const useDestinationStore = defineStore('Destinations', () => {
       latitude,
       longitude,
       city,
-      country
+      country,
+      description
     })
 
     if (error && error.statusCode !== 400) {
