@@ -14,7 +14,8 @@ internal sealed class Mapper : RequestMapper<Request, Destination>
             Tags = r.Tags,
             Website = r.Website,
             City = r.City,
-            Country = r.Country
+            Country = r.Country,
+            Description = string.IsNullOrWhiteSpace(r.Description) ? null : r.Description
         };
 
 }

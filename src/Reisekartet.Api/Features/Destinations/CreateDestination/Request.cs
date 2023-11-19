@@ -10,7 +10,8 @@ internal sealed record Request(
      double Latitude,
      double Longitude,
      string? City,
-     string? Country
+     string? Country,
+     string? Description
 );
 
 internal sealed class RequestValidator : Validator<Request>
@@ -37,7 +38,7 @@ internal sealed class RequestValidator : Validator<Request>
             .ForEach(t =>
                 t.NotEmpty()
                     .WithMessage("Tag cannot be empty")
-                    .MinimumLength(3)
+                    .MinimumLength(2)
                     .WithMessage("Tag must be at least 3 characters long")
                     .MaximumLength(50)
                     .WithMessage("Tag must be at most 50 characters long")
@@ -56,6 +57,9 @@ internal sealed class RequestValidator : Validator<Request>
 
         RuleFor(t=> t.Country)
             .MaximumLength(200).WithMessage("Country must be at most 200 characters long");
+
+        RuleFor(t => t.Description)
+            .MaximumLength(500).WithMessage("Description must be at most 500 characters long");
     }
 }
 

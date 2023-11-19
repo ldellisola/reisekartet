@@ -10,7 +10,7 @@ export interface Filters {
 }
 
 export const useFiltersDialog = defineStore('FiltersDialog', () => {
-  const isOpen = ref(true)
+  const isOpen = ref(false)
   const name = ref('')
   const country = ref('')
   const city = ref('')

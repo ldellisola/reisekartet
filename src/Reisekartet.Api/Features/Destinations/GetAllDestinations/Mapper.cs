@@ -15,7 +15,8 @@ internal sealed class Mapper : ResponseMapper<Response, IEnumerable<Destination>
                     t.City,
                     t.Country,
                     t.Location.Coordinates.Latitude,
-                    t.Location.Coordinates.Longitude
+                    t.Location.Coordinates.Longitude,
+                    t.Description
                 )
             ).ToArray()
         );
