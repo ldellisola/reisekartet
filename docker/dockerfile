@@ -23,6 +23,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
 COPY --from=build-backend /src/out ./
 COPY --from=build-frontend /src/dist ./wwwroot
-ENTRYPOINT ["dotnet", "Reisekartet.Site.dll"]
+ENTRYPOINT ["dotnet", "Reisekartet.Api.dll"]
 
 
