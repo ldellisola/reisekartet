@@ -9,7 +9,7 @@ namespace Reisekartet.Api.Features.Destinations.ImportDestinations;
 
 internal sealed record Command(string DestinationId) : ICommand;
 
-internal sealed class CommandHandler(ReisekartetDbContext db, IBingGeocoding geocoder, ILogger<CommandHandler> logger) : ICommandHandler<Command>
+internal sealed class CommandHandler(ReisekartetDbContext db, IBingGeocoding geocoder, ILogger logger) : ICommandHandler<Command>
 {
     public async Task ExecuteAsync(Command command, CancellationToken ct)
     {
