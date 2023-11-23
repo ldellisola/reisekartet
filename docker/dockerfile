@@ -4,6 +4,7 @@ WORKDIR /src
 COPY ./src/Reisekartet.sln .
 COPY ./src/Reisekartet.Api ./Reisekartet.Api/
 COPY ./src/Reisekartet.Persistence/ ./Reisekartet.Persistence/
+COPY ./src/Reisekartet.Kml/ ./Reisekartet.Kml/
 
 RUN dotnet restore Reisekartet.sln
 RUN dotnet build -c Release --no-restore

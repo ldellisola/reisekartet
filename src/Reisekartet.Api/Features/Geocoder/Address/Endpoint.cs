@@ -4,15 +4,8 @@ using Geo.Bing.Models.Parameters;
 
 namespace Reisekartet.Api.Features.Geocoder.Address;
 
-internal sealed class Endpoint : Endpoint<Request,Response, ResponseMapper>
+internal sealed class Endpoint(IBingGeocoding geocoder) : Endpoint<Request,Response, ResponseMapper>
 {
-    private readonly IBingGeocoding _geocoder;
-
-    public Endpoint(IBingGeocoding geocoder)
-    {
-        _geocoder = geocoder;
-    }
-
     public override void Configure()
     {
         Get("/geocoder/address");
@@ -21,7 +14,7 @@ internal sealed class Endpoint : Endpoint<Request,Response, ResponseMapper>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var response = await   _geocoder.AddressGeocodingAsync(new AddressGeocodingParameters
+        var response = await   geocoder.AddressGeocodingAsync(new AddressGeocodingParameters
         {
             AddressLine = req.Address,
             IncludeQueryParse = true,

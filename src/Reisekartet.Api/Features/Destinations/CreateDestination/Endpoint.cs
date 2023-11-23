@@ -3,12 +3,8 @@ using Reisekartet.Persistence.Config;
 
 namespace Reisekartet.Api.Features.Destinations.CreateDestination;
 
-internal sealed class Endpoint: EndpointWithMapper<Request,Mapper>
+internal sealed class Endpoint(ReisekartetDbContext db) : EndpointWithMapper<Request,Mapper>
 {
-    private readonly ReisekartetDbContext _db;
-
-    public Endpoint(ReisekartetDbContext db) => _db = db;
-
     public override void Configure()
     {
         Post("/destinations");
@@ -18,7 +14,7 @@ internal sealed class Endpoint: EndpointWithMapper<Request,Mapper>
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         var destination = Map.ToEntity(req);
-        await _db.Destinations.InsertOneAsync(destination, cancellationToken: ct);
+        await db.Destinations.InsertOneAsync(destination, cancellationToken: ct);
         await SendAsync(null, statusCode: 201, cancellation: ct);
     }
 }

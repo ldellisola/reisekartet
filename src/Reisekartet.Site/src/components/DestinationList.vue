@@ -5,6 +5,7 @@
     :items="destinations.all"
     class="elevation-10"
     show-expand
+    height="600"
     :expand-on-click="true"
   >
     <template v-slot:item.actions="{ item }">
