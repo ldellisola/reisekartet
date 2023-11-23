@@ -42,11 +42,15 @@ async function deleteResource(path: string): Promise<ReisekartetResponse<undefin
   return { data: undefined, error: createEmptyError(response.status, response.statusText) }
 }
 
-async function postResource(path: string, body: {}): Promise<ReisekartetResponse<undefined>> {
+async function postResource(
+  path: string,
+  body: {} | FormData
+): Promise<ReisekartetResponse<undefined>> {
+  const hasFormData = body instanceof FormData
   const response = await fetch(baseUrl + path, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    headers: hasFormData ? {} : { 'Content-Type': 'application/json' },
+    body: hasFormData ? body : JSON.stringify(body)
   })
 
   if (response.ok) return { data: undefined, error: null }

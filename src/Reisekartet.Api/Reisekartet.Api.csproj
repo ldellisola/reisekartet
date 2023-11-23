@@ -19,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Reisekartet.Kml\Reisekartet.Kml.fsproj" />
       <ProjectReference Include="..\Reisekartet.Persistence\Reisekartet.Persistence.csproj" />
     </ItemGroup>
 </Project>
