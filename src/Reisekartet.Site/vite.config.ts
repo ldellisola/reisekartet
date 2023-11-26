@@ -6,13 +6,9 @@ import vuetify from 'vite-plugin-vuetify'
 
 // https://vitejs.dev/config/
 // @ts-ignore
-export default ({ mode }) => {
+export default () => {
   return defineConfig({
-    esbuild: {
-      supported: {
-        'top-level-await': true
-      }
-    },
+    base: '',
     plugins: [
       vue(),
       vuetify({
