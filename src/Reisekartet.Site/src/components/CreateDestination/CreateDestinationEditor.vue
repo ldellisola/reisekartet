@@ -4,7 +4,7 @@ import CoordinatesEditor from '@components/CreateDestination/Location/Coordinate
 import AddressEditor from '@components/CreateDestination/Location/AddressEditor.vue'
 import { useDestinationStore } from '@store/Destinations'
 import { computed } from 'vue'
-import { useDestinationEditorForm } from '@store/DestinationEditor.form'
+import { useDestinationEditorForm } from '@components/CreateDestination/DestinationEditor.form'
 import Map from '@components/Mapping/Map.vue'
 import SingleDestinationLayer from '@components/Mapping/SingleDestinationLayer.vue'
 import { getColor } from '@/lib/StringFunctions'

@@ -2,10 +2,11 @@ import { defineStore } from 'pinia'
 import { useForm } from 'vee-validate'
 import * as Yup from 'yup'
 import { useDestinationStore } from '@store/Destinations'
-import type { PlaceLocation } from '@/api/Models/Destination'
+import type { Destination, PlaceLocation } from '@/api/Models/Destination'
 import { isNullOrWhitespace } from '@/lib/StringFunctions'
 
 export interface DestinationEditorForm {
+  id: string | null
   name: string
   latitude: string
   longitude: string
@@ -33,6 +34,7 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
   const { errors, useFieldModel, handleSubmit, resetForm } = useForm<DestinationEditorForm>({
     validationSchema: schema,
     initialValues: {
+      id: null,
       name: '',
       latitude: '',
       longitude: '',
@@ -43,7 +45,8 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
       description: null
     }
   })
-  const [name, latitude, longitude, website, tags, city, country, description] = useFieldModel([
+  const [id, name, latitude, longitude, website, tags, city, country, description] = useFieldModel([
+    'id',
     'name',
     'latitude',
     'longitude',
@@ -55,16 +58,32 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
   ])
 
   const onSubmit = handleSubmit(async (values, { setErrors, resetForm }) => {
-    const error = await destinations.create(
-      values.name,
-      values.tags,
-      values.website,
-      Number.parseFloat(values.latitude),
-      Number.parseFloat(values.longitude),
-      values.city,
-      values.country,
-      values.description
-    )
+    let error
+
+    if (values.id !== null) {
+      error = await destinations.update(
+        values.id,
+        values.name,
+        values.tags,
+        values.website,
+        Number.parseFloat(values.latitude),
+        Number.parseFloat(values.longitude),
+        values.city,
+        values.country,
+        values.description
+      )
+    } else {
+      error = await destinations.create(
+        values.name,
+        values.tags,
+        values.website,
+        Number.parseFloat(values.latitude),
+        Number.parseFloat(values.longitude),
+        values.city,
+        values.country,
+        values.description
+      )
+    }
     if (error) {
       console.error(error)
       setErrors(error.errors)
@@ -103,6 +122,23 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
     }
   }
 
+  async function loadDestination(_id: string): Promise<Destination | undefined> {
+    const destination = destinations.get(_id)
+    if (destination !== undefined) {
+      id.value = destination.id
+      name.value = destination.name
+      latitude.value = destination.latitude.toString()
+      longitude.value = destination.longitude.toString()
+      website.value = destination.website
+      tags.value = destination.tags
+      city.value = destination.city
+      country.value = destination.country
+      description.value = destination.description
+    }
+
+    return destination
+  }
+
   return {
     name,
     latitude,
@@ -116,6 +152,7 @@ export const useDestinationEditorForm = defineStore('DestinationsEditorForm', ()
     onSubmit,
     setCords,
     getLocation,
+    loadDestination,
     resetForm
   }
 })

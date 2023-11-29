@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import type { Destination } from '@/api/Models/Destination'
 import { useErrorStore } from './ErrorStore'
 import type { ReisekartetError } from '@/api/reisekartetClient'
-import { deleteResource, getResource, postResource } from '@/api/reisekartetClient'
+import { deleteResource, getResource, postResource, putResource } from '@/api/reisekartetClient'
 import { computed, ref } from 'vue'
 import { groupBy } from '@/lib/ArrayFunctions'
 import type { Filters } from '@components/Filters/Filters.dialog'
@@ -45,8 +45,6 @@ export const useDestinationStore = defineStore('Destinations', () => {
       console.log('Bad')
       return
     }
-
-    console.debug(data?.destinations)
     destinations.value = data!.destinations
   }
 
@@ -84,6 +82,41 @@ export const useDestinationStore = defineStore('Destinations', () => {
     return null
   }
 
+  async function update(
+    id: string,
+    name: string,
+    tags: string[],
+    website: string | null,
+    latitude: number,
+    longitude: number,
+    city: string | null,
+    country: string | null,
+    description: string | null
+  ): Promise<ReisekartetError | null> {
+    const { error } = await putResource(`/destinations/${id}`, {
+      name,
+      tags,
+      website,
+      latitude,
+      longitude,
+      city,
+      country,
+      description
+    })
+
+    if (error && error.statusCode !== 400) {
+      errorStore.addError(error.message)
+      return null
+    }
+
+    if (error && error.statusCode === 400) {
+      return error
+    }
+
+    await refresh()
+    return null
+  }
+
   async function remove(id: string) {
     const { error } = await deleteResource(`/destinations/${id}`)
     if (error) {
@@ -98,6 +131,10 @@ export const useDestinationStore = defineStore('Destinations', () => {
     filters.value = newFilters
   }
 
+  function get(id: string): Destination | undefined {
+    return destinations.value.find((d) => d.id === id)
+  }
+
   return {
     all,
     byType,
@@ -105,6 +142,8 @@ export const useDestinationStore = defineStore('Destinations', () => {
     refresh,
     create,
     remove,
-    setFilters
+    setFilters,
+    get,
+    update
   }
 })
