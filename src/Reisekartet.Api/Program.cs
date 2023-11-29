@@ -1,12 +1,12 @@
 using FastEndpoints;
 using FastEndpoints.Swagger;
-using Geo.Bing.DependencyInjection;
+using Reisekartet.Api.Configuration;
 using Reisekartet.Api.JobQueue;
 using Reisekartet.Persistence.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBingServices(t => t.UseKey(builder.Configuration.GetValue<string>("Geocoder:BingMapsKey")));
+builder.Services.AddGeocoder(builder.Configuration);
 builder.Services
     .AddFastEndpoints(t=> t.SourceGeneratorDiscoveredTypes.AddRange(Reisekartet.Api.DiscoveredTypes.All))
     .AddJobQueues<JobRecord,JobStorageProvider>()

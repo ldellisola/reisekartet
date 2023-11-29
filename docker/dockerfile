@@ -20,9 +20,15 @@ RUN bunx --bun vite build
 
 # Runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
+
+ENV ASPNETCORE_URLS=http://+:80
+ENV ASPNETCORE_ENVIRONMENT=Production
+
 WORKDIR /app
 COPY --from=build-backend /src/out ./
 COPY --from=build-frontend /src/dist ./wwwroot
 ENTRYPOINT ["dotnet", "Reisekartet.Api.dll"]
 
-
+LABEL org.opencontainers.image.source=https://github.com/ldellisola/reisekartet
+LABEL org.opencontainers.image.description="Reisekartet (The Travel Map) is an open source travel destination manager"
+LABEL org.opencontainers.image.licenses=MIT
