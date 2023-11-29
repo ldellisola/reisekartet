@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { useLocationForm } from '@components/CreateDestination/Location/Location.form'
-import { useDestinationEditorForm } from '@store/DestinationEditor.form'
+import { useDestinationEditorForm } from '@components/CreateDestination/DestinationEditor.form'
 import { computed, ref, watch } from 'vue'
 
 export const useCreateDestinationDialog = defineStore('CreateDestinationDialog', () => {
@@ -8,8 +8,9 @@ export const useCreateDestinationDialog = defineStore('CreateDestinationDialog',
   const currentStep = ref(1)
   const isLoading = ref(false)
   const isOpen = ref(false)
+  const mode = ref<'create' | 'edit'>('create')
   const previousButtonLabel = computed(() => (currentStep.value > 1 ? 'Previous' : 'Cancel'))
-  const nextButtonLabel = computed(() => (currentStep.value < steps.length ? 'Next' : 'Create'))
+  const nextButtonLabel = computed(() => (currentStep.value < steps.length ? 'Next' : 'Save'))
 
   watch(isOpen, (value) => {
     if (value) {
@@ -57,6 +58,21 @@ export const useCreateDestinationDialog = defineStore('CreateDestinationDialog',
     isLoading.value = false
   }
 
+  async function open(id?: string) {
+    if (id) {
+      mode.value = 'edit'
+      const destination = await destinationForm.loadDestination(id)
+      if (destination !== undefined)
+        locationForm.setLocation({
+          latitude: destination.latitude,
+          longitude: destination.longitude
+        })
+    } else {
+      mode.value = 'create'
+    }
+    isOpen.value = true
+  }
+
   return {
     steps,
     currentStep,
@@ -65,6 +81,7 @@ export const useCreateDestinationDialog = defineStore('CreateDestinationDialog',
     nextButtonLabel,
     previousButtonLabel,
     nextButtonAction,
-    previousButtonAction
+    previousButtonAction,
+    open
   }
 })

@@ -10,4 +10,5 @@ export interface Destination extends PlaceLocation {
   country: string | null
   tags: string[]
   website: string | null
+  description: string | null
 }

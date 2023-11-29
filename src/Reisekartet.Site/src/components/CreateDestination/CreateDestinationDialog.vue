@@ -44,11 +44,9 @@
 
 <script setup lang="ts">
 import { useCreateDestinationDialog } from '@components/CreateDestination/CreateDestination.dialog'
-import { useDestinationEditorForm } from '@store/DestinationEditor.form'
 import CreateDestinationEditor from '@components/CreateDestination/CreateDestinationEditor.vue'
 import { ref } from 'vue'
 
 const disabled = ref(false)
-const form = useDestinationEditorForm()
 const dialog = useCreateDestinationDialog()
 </script>

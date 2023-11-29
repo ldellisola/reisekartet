@@ -27,17 +27,18 @@ const schema = object({
 
 export const useLocationForm = defineStore('LocationForm', () => {
   const mode = ref<'coordinates' | 'address' | 'googleMapsLink'>('coordinates')
-  const { errors, useFieldModel, handleSubmit, resetForm, resetField } = useForm<LocationForm>({
-    validationSchema: schema,
-    initialValues: {
-      latitude: null,
-      longitude: null,
-      address: null,
-      googleMapsLink: null,
-      city: null,
-      country: null
-    }
-  })
+  const { errors, useFieldModel, handleSubmit, resetForm, resetField, setFieldValue } =
+    useForm<LocationForm>({
+      validationSchema: schema,
+      initialValues: {
+        latitude: null,
+        longitude: null,
+        address: null,
+        googleMapsLink: null,
+        city: null,
+        country: null
+      }
+    })
 
   const [latitude, longitude, address, googleMapsLink, city, country] = useFieldModel([
     'latitude',
@@ -67,7 +68,6 @@ export const useLocationForm = defineStore('LocationForm', () => {
 
   function getCoordinatesFromGoogleMapsURL(url: string): PlaceLocation | null {
     const match = url.match(/@([-\d.]+),([-\d.]+)/)
-    console.debug(match)
     if (match && match[1] && match[2]) {
       return {
         latitude: parseFloat(match[1]),
@@ -161,6 +161,11 @@ export const useLocationForm = defineStore('LocationForm', () => {
     resetField('googleMapsLink')
   }
 
+  function setLocation(location: PlaceLocation) {
+    setFieldValue('latitude', location.latitude.toString())
+    setFieldValue('longitude', location.longitude.toString())
+  }
+
   return {
     errors,
     latitude,
@@ -171,6 +176,7 @@ export const useLocationForm = defineStore('LocationForm', () => {
     mode,
     country,
     onSubmit,
+    setLocation,
     getLocation,
     resetForm
   }

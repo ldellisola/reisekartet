@@ -64,4 +64,21 @@ async function postResource(
   return { data: undefined, error: createEmptyError(response.status, response.statusText) }
 }
 
-export { getResource, deleteResource, postResource }
+async function putResource(path: string, body: {}): Promise<ReisekartetResponse<undefined>> {
+  const response = await fetch(baseUrl + path, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  })
+
+  if (response.ok) return { data: undefined, error: null }
+
+  if (
+    response.headers.has('content-type') &&
+    response.headers.get('content-type') === 'application/problem+json'
+  ) {
+    return { data: null, error: (await response.json()) as ReisekartetError }
+  }
+  return { data: undefined, error: createEmptyError(response.status, response.statusText) }
+}
+export { getResource, deleteResource, postResource, putResource }
