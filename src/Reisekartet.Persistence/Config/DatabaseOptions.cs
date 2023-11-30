@@ -8,9 +8,6 @@ namespace Reisekartet.Persistence.Config;
 /// </summary>
 public sealed class DatabaseOptions
 {
-
-    public DatabaseOptions(){}
-
     /// <summary>The database connection string</summary>
     public string ConnectionString { get; set; } = string.Empty;
 
