@@ -29,7 +29,7 @@
       </v-row>
     </template>
     <template v-slot:item.tags="{ value }">
-      <v-chip class="ms-1" v-for="tag in value" :color="getColor(tag)">
+      <v-chip class="ms-1" variant="flat" v-for="tag in value" :color="getColor(tag)">
         {{ tag }}
       </v-chip>
     </template>
