@@ -7,6 +7,7 @@ using Reisekartet.Persistence.Config;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddGeocoder(builder.Configuration);
+builder.Services.ConfigureOptions<MapsConfigurationSetup>();
 builder.Services
     .AddFastEndpoints(t=> t.SourceGeneratorDiscoveredTypes.AddRange(Reisekartet.Api.DiscoveredTypes.All))
     .AddJobQueues<JobRecord,JobStorageProvider>()
