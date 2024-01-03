@@ -5,7 +5,7 @@
         <ol-feature
           v-for="destination in destinations"
           :key="destination.latitude * 2 + destination.longitude * 3"
-          :properties="{ type: type }"
+          :properties="{ type: type, id: destination.id }"
         >
           <ol-geom-point
             :coordinates="transformCoordinates(destination.longitude, destination.latitude)"
@@ -30,11 +30,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { PlaceLocation } from '@/api/Models/Destination'
+import type { Destination } from '@/api/Models/Destination'
 import { transform } from 'ol/proj.js'
 import { getColor } from '@/lib/StringFunctions'
 const props = defineProps<{
-  destinations: PlaceLocation[]
+  destinations: Destination[]
   type: string
 }>()
 const transformCoordinates = (longitude: number, latitude: number) => {
