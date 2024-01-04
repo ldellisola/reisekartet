@@ -15,7 +15,7 @@
       :projection="projection"
     />
     <ol-tile-layer>
-      <ol-source-osm />
+      <ol-source-osm :url="configuration.tileServer" />
     </ol-tile-layer>
 
     <ol-interaction-select
@@ -34,6 +34,7 @@
 
 <script lang="ts" setup>
 import { transform } from 'ol/proj.js'
+import { useConfiguration } from '@store/Configuration'
 import { inject, ref, watch } from 'vue'
 import marker from '@/assets/marker.png'
 import { useDestinationViewDialog } from '@components/Destination/DestinationViewDialog/DestinationView.Dialog'
@@ -45,6 +46,8 @@ const multipleDestinationViewDialog = useMultipleDestinationViewDialog()
 
 const mapRef = ref(null)
 
+const configuration = useConfiguration()
+await configuration.refresh()
 defineProps({
   center: {
     type: Array<Number>,
