@@ -51,14 +51,7 @@
                   </v-card-text>
                 </v-card>
               </v-col>
-              <v-col v-if="!isNullOrWhitespace(item.description)">
-                <v-card class="elevation-2 fill-height">
-                  <v-card-title>Description</v-card-title>
-                  <v-card-text>
-                    <p>{{ item.description }}</p>
-                  </v-card-text>
-                </v-card>
-              </v-col>
+
               <v-col :cols="isNullOrWhitespace(item.description) ? 9 : 6">
                 <Map
                   :center="[item.longitude, item.latitude]"
@@ -85,7 +78,6 @@ import Map from '@components/Mapping/Map.vue'
 import SingleDestinationLayer from '@components/Mapping/SingleDestinationLayer.vue'
 import { useCreateDestinationDialog } from '@components/CreateDestination/CreateDestination.dialog'
 const destinations = useDestinationStore()
-await destinations.refresh()
 
 async function remove(id: string) {
   await destinations.remove(id)
