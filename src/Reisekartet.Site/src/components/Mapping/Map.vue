@@ -36,10 +36,12 @@
 import { transform } from 'ol/proj.js'
 import { inject, ref, watch } from 'vue'
 import marker from '@/assets/marker.png'
-import { useDestinationViewDialog } from '@components/Destination/DestinationView.Dialog'
+import { useDestinationViewDialog } from '@components/Destination/DestinationViewDialog/DestinationView.Dialog'
 import type Map from 'ol/Map'
+import { useMultipleDestinationViewDialog } from '@components/Destination/MultipleDestinationView/MultipleDestinationView.Dialog'
 
 const destinationViewDialog = useDestinationViewDialog()
+const multipleDestinationViewDialog = useMultipleDestinationViewDialog()
 
 const mapRef = ref(null)
 
@@ -70,12 +72,25 @@ const featureSelected = (event: any) => {
     destinationViewDialog.close()
     return
   }
-  for (let feature of event.selected[0].values_.features) {
-    destinationViewDialog.open(feature.values_.id)
-    return
+
+  if (event.selected[0].values_.features.length === 0) {
+    destinationViewDialog.close()
+  } else if (event.selected[0].values_.features.length == 1) {
+    destinationViewDialog.open(event.selected[0].values_.features[0].values_.id)
+  } else {
+    console.log(event.selected[0].values_.features.map((feature: any) => feature.values_.id))
+    multipleDestinationViewDialog.open(
+      event.selected[0].values_.features.map((feature: any) => feature.values_.id)
+    )
   }
 }
 
+multipleDestinationViewDialog.onClose(() => {
+  const map = mapRef.value?.map as Map
+  map.getInteractions().forEach((interaction) => {
+    if (interaction.getFeatures !== undefined) interaction.getFeatures().clear()
+  })
+})
 watch(
   () => destinationViewDialog.isOpen,
   (isOpen) => {

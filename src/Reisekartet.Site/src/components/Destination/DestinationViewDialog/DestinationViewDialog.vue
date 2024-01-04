@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import DestinationView from '@components/Destination/DestinationView.vue'
-import { useDestinationViewDialog } from '@components/Destination/DestinationView.Dialog'
+import { useDestinationViewDialog } from '@components/Destination/DestinationViewDialog/DestinationView.Dialog'
 
 const destinationViewDialog = useDestinationViewDialog()
 </script>
