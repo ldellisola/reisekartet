@@ -29,7 +29,7 @@ internal sealed class CommandHandler(ReisekartetDbContext db, IBingGeocoding geo
         }, ct);
 
         if (response.StatusCode >= 400)
-            throw new ApplicationException("Geocoding failed");
+            throw new InvalidOperationException("Geocoding failed");
 
         if (response.ResourceSets.Count == 0 | response.ResourceSets.First().Resources.Count == 0)
         {

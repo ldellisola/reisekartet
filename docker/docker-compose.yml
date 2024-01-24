@@ -4,6 +4,12 @@ services:
   mongo:
     image: mongo
     restart: unless-stopped
+    
+  redis:
+    image: redis
+    restart: unless-stopped
+    ports:
+      - 6379:6379
 
   reisekartet:
     image: ghcr.io/ldellisola/reisekartet:develop
@@ -11,5 +17,9 @@ services:
     environment:
       BING_MAPS_KEY: "..."
       MONGO_CONNECTION_STRING: "mongodb://mongo:27017"
+      REDIS_CONNECTION_STRING: "localhost:6379"
+      USE_TILE_SERVER_CACHE: true
+      CACHE_DURATION: "10d"
+      TILE_SERVER: "..."
     ports:
       - 5000:80

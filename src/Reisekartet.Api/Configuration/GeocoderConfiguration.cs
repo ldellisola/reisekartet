@@ -11,7 +11,6 @@ internal static class GeocoderConfiguration
         if (options.BingMapsKey is not null)
             services.AddBingServices(t => t.UseKey(options.BingMapsKey));
 
-
         if (!options.HasGeoCoder)
             throw new ArgumentException("No geocoder configured.");
 
@@ -19,7 +18,7 @@ internal static class GeocoderConfiguration
     }
 }
 
-internal class GeocoderOptions
+internal sealed class GeocoderOptions
 {
     internal GeocoderOptions(IConfiguration configuration)
     {

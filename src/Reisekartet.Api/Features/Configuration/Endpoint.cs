@@ -4,7 +4,7 @@ using Reisekartet.Api.Configuration;
 
 namespace Reisekartet.Api.Features.Configuration;
 
-internal class Endpoint(IOptions<MapsConfiguration> configuration) : EndpointWithoutRequest<Response, ResponseMapper>
+internal sealed class Endpoint(IOptions<MapsConfiguration> configuration) : EndpointWithoutRequest<Response, ResponseMapper>
 {
     public override void Configure()
     {
