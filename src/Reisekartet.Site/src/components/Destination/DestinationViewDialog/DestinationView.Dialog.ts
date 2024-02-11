@@ -14,8 +14,8 @@ export const useDestinationViewDialog = defineStore('DestinationViewDialog', () 
   })
   const destinationStore = useDestinationStore()
 
-  function open(destinationId: string) {
-    destination.value = destinationStore.get(destinationId)
+  async function open(destinationId: string) {
+    destination.value = await destinationStore.get(destinationId)
     isOpen.value = true
   }
 

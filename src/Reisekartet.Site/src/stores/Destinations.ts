@@ -7,6 +7,7 @@ import { computed, ref } from 'vue'
 import { groupBy } from '@/lib/ArrayFunctions'
 import type { Filters } from '@components/Filters/Filters.dialog'
 import { containsIgnoreCase } from '@/lib/StringFunctions'
+import type { Tag } from '@/api/Models/Tag'
 
 export const useDestinationStore = defineStore('Destinations', () => {
   const errorStore = useErrorStore()
@@ -28,24 +29,29 @@ export const useDestinationStore = defineStore('Destinations', () => {
         filters.value.tags.every((t) => tags.includes(t))
     )
   )
-  const destinationTypes = computed(() => [
-    ...new Set(
-      destinations.value.reduce(
-        (accumulator, destination) => accumulator.concat(destination.tags),
-        [] as string[]
-      )
-    )
-  ])
+  const destinationTypes = ref<string[]>([])
 
   const byType = computed(() => groupBy(all.value, (d) => d.tags[0]))
 
   async function refresh() {
-    const { data, error } = await getResource<{ destinations: Destination[] }>('/destinations')
-    if (error) {
+    const destinationsPayload = await getResource<{ destinations: Destination[] }>('/destinations')
+    if (destinationsPayload.error) {
       console.log('Bad')
       return
     }
-    destinations.value = data!.destinations
+    destinations.value = destinationsPayload.data!.destinations
+
+    await refreshTags()
+  }
+
+  async function refreshTags(): Promise<Tag[] | undefined> {
+    const tagsPayload = await getResource<{ tags: Tag[] }>('/tags')
+    if (tagsPayload.error) {
+      console.log('Bad')
+      return undefined
+    }
+    destinationTypes.value = tagsPayload.data!.tags.map((t) => t.name)
+    return tagsPayload.data!.tags
   }
 
   async function create(
@@ -131,8 +137,14 @@ export const useDestinationStore = defineStore('Destinations', () => {
     filters.value = newFilters
   }
 
-  function get(id: string): Destination | undefined {
-    return destinations.value.find((d) => d.id === id)
+  async function get(id: string): Promise<Destination | undefined> {
+    const { data, error } = await getResource<Destination>(`/destinations/${id}`)
+    if (error) {
+      errorStore.addError(error.message)
+      return undefined
+    }
+
+    return data!
   }
 
   return {
@@ -140,6 +152,7 @@ export const useDestinationStore = defineStore('Destinations', () => {
     byType,
     destinationTypes,
     refresh,
+    refreshTags,
     create,
     remove,
     setFilters,

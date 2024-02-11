@@ -23,7 +23,14 @@ async function getResource<T>(path: string): Promise<ReisekartetResponse<T>> {
 
   if (response.ok) return { data: (await response.json()) as T, error: null }
 
-  return { data: null, error: (await response.json()) as ReisekartetError }
+  if (
+    response.headers.has('content-type') &&
+    response.headers.get('content-type') === 'application/problem+json'
+  ) {
+    return { data: null, error: (await response.json()) as ReisekartetError }
+  }
+
+  return { data: null, error: createEmptyError(response.status, response.statusText) }
 }
 
 async function deleteResource(path: string): Promise<ReisekartetResponse<undefined>> {
