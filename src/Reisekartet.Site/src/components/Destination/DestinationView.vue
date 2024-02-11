@@ -59,6 +59,9 @@ defineProps<{
       >
         Open in Google Maps
       </v-btn>
+      <router-link :to="`/destination/${destination?.id}`">
+        <v-btn>Edit</v-btn>
+      </router-link>
     </v-card-actions>
   </v-card>
 </template>

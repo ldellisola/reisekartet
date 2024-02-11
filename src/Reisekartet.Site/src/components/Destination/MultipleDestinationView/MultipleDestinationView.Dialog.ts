@@ -15,12 +15,15 @@ export const useMultipleDestinationViewDialog = defineStore('MultipleDestination
   })
   const destinationStore = useDestinationStore()
 
-  function open(destinationIds: string[]) {
-    destinations.value = destinationIds
-      .map((id) => destinationStore.get(id))
-      .filter((d) => d !== undefined) as Destination[]
+  async function open(destinationIds: string[]) {
+    destinations.value = []
 
-    console.debug(destinations.value)
+    for (const id of destinationIds) {
+      const destination = await destinationStore.get(id)
+      if (destination) {
+        destinations.value.push(destination)
+      }
+    }
     isOpen.value = true
   }
 

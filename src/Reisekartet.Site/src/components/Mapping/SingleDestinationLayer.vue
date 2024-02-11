@@ -24,11 +24,17 @@
 <script lang="ts" setup>
 import type { PlaceLocation } from '@/api/Models/Destination'
 import { transform } from 'ol/proj'
+import { toArray } from '@/lib/ArrayFunctions'
+import { useConfiguration } from '@store/Configuration'
 
 const props = defineProps<{
   destination: PlaceLocation
 }>()
+
+const configuration = useConfiguration()
+await configuration.load()
+
 const transformCoordinates = (destination: PlaceLocation) => {
-  return transform([destination.longitude, destination.latitude], 'EPSG:4326', 'EPSG:3857')
+  return transform(toArray(destination)!, 'EPSG:4326', configuration.projection)
 }
 </script>

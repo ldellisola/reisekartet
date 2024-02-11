@@ -76,18 +76,17 @@ import { getColor, isNullOrWhitespace } from '@/lib/StringFunctions'
 import { ref, watch } from 'vue'
 import Map from '@components/Mapping/Map.vue'
 import SingleDestinationLayer from '@components/Mapping/SingleDestinationLayer.vue'
-import { useCreateDestinationDialog } from '@components/CreateDestination/CreateDestination.dialog'
+import { useRouter } from 'vue-router'
 const destinations = useDestinationStore()
+const router = useRouter()
 
 async function remove(id: string) {
   await destinations.remove(id)
 }
 
-const createDestinationDialog = useCreateDestinationDialog()
-
 async function edit(id: string) {
   oldId.value = id
-  await createDestinationDialog.open(id)
+  await router.push(`/destination/${id}`)
 }
 
 const oldId = ref<string | undefined>(undefined)

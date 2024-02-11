@@ -1,26 +1,34 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { getResource } from '@/api/reisekartetClient'
 import type { Configuration } from '@/api/Models/Configuration'
 
 export const useConfiguration = defineStore('ConfigurationStore', () => {
-  const tileServer = ref<string>('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
-  const projection = ref<string>('EPSG:3857')
+  const customTileServer = ref<string | null>(null)
+  const customProjection = ref<string | null>(null)
+  const isLoaded = ref<boolean>(false)
+  const tileServer = computed<string>(
+    () => customTileServer.value ?? 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+  )
+  const projection = computed<string>(() => customProjection.value ?? 'EPSG:3857')
 
   async function refresh() {
+    if (isLoaded.value) return
+
     const { data, error } = await getResource<Configuration>('/configuration')
     if (error) {
       console.log(error)
       return
     }
 
-    tileServer.value = data?.tileServer ?? tileServer.value
-    projection.value = data?.projection ?? projection.value
+    isLoaded.value = true
+    customTileServer.value = data?.tileServer!
+    customProjection.value = data?.projection!
   }
 
   return {
     tileServer,
     projection,
-    refresh
+    load: refresh
   }
 })

@@ -9,7 +9,7 @@
   >
     <ol-view
       ref="view"
-      :center="transform(center, 'EPSG:4326', projection)"
+      :center="transform(center ?? [0, 0], 'EPSG:4326', projection)"
       :zoom="zoom"
       :rotation="rotation"
       :projection="projection"
@@ -47,11 +47,11 @@ const multipleDestinationViewDialog = useMultipleDestinationViewDialog()
 const mapRef = ref(null)
 
 const configuration = useConfiguration()
-await configuration.refresh()
+await configuration.load()
 defineProps({
   center: {
     type: Array<Number>,
-    default: () => [0, 0]
+    default: () => [20, 0]
   },
   zoom: {
     type: Number,
@@ -70,7 +70,7 @@ defineProps({
 const selectConditions = inject('ol-selectconditions')
 const selectCondition = selectConditions.click
 
-const featureSelected = (event: any) => {
+const featureSelected = async (event: any) => {
   if (event.selected[0] === undefined) {
     destinationViewDialog.close()
     return
@@ -79,10 +79,10 @@ const featureSelected = (event: any) => {
   if (event.selected[0].values_.features.length === 0) {
     destinationViewDialog.close()
   } else if (event.selected[0].values_.features.length == 1) {
-    destinationViewDialog.open(event.selected[0].values_.features[0].values_.id)
+    await destinationViewDialog.open(event.selected[0].values_.features[0].values_.id)
   } else {
     console.log(event.selected[0].values_.features.map((feature: any) => feature.values_.id))
-    multipleDestinationViewDialog.open(
+    await multipleDestinationViewDialog.open(
       event.selected[0].values_.features.map((feature: any) => feature.values_.id)
     )
   }
@@ -90,6 +90,7 @@ const featureSelected = (event: any) => {
 
 multipleDestinationViewDialog.onClose(() => {
   const map = mapRef.value?.map as Map
+  console.debug(map)
   map.getInteractions().forEach((interaction) => {
     if (interaction.getFeatures !== undefined) interaction.getFeatures().clear()
   })
