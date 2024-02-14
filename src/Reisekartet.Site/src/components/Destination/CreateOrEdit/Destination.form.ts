@@ -34,7 +34,7 @@ export const useDestinationForm = defineStore('DestinationForm', () => {
     }
     location.value = { latitude, longitude }
     const { data, error } = await getResource<{ locations: GeocodedLocation[] }>(
-      `/geocoder/reverse?latitude=${latitude}&longitude=${longitude}`
+      `/geocoder/point?latitude=${latitude}&longitude=${longitude}`
     )
 
     if (error || !data || data.locations.length === 0) {
