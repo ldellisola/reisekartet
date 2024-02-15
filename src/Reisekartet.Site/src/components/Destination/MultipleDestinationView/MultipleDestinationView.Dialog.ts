@@ -19,7 +19,7 @@ export const useMultipleDestinationViewDialog = defineStore('MultipleDestination
     destinations.value = []
 
     for (const id of destinationIds) {
-      const destination = await destinationStore.get(id)
+      const destination = await destinationStore.get(id, false)
       if (destination) {
         destinations.value.push(destination)
       }

@@ -81,7 +81,6 @@ const featureSelected = async (event: any) => {
   } else if (event.selected[0].values_.features.length == 1) {
     await destinationViewDialog.open(event.selected[0].values_.features[0].values_.id)
   } else {
-    console.log(event.selected[0].values_.features.map((feature: any) => feature.values_.id))
     await multipleDestinationViewDialog.open(
       event.selected[0].values_.features.map((feature: any) => feature.values_.id)
     )
@@ -89,8 +88,8 @@ const featureSelected = async (event: any) => {
 }
 
 multipleDestinationViewDialog.onClose(() => {
-  const map = mapRef.value?.map as Map
-  console.debug(map)
+  const map = mapRef.value?.map as Map | undefined
+  if (map === undefined) return
   map.getInteractions().forEach((interaction) => {
     if (interaction.getFeatures !== undefined) interaction.getFeatures().clear()
   })
@@ -99,7 +98,8 @@ watch(
   () => destinationViewDialog.isOpen,
   (isOpen) => {
     if (!isOpen) {
-      const map = mapRef.value?.map as Map
+      const map = mapRef.value?.map as Map | undefined
+      if (map === undefined) return
       map.getInteractions().forEach((interaction) => {
         if (interaction.getFeatures !== undefined) interaction.getFeatures().clear()
       })

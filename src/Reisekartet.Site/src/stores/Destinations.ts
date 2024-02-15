@@ -137,7 +137,11 @@ export const useDestinationStore = defineStore('Destinations', () => {
     filters.value = newFilters
   }
 
-  async function get(id: string): Promise<Destination | undefined> {
+  async function get(id: string, refresh: boolean = false): Promise<Destination | undefined> {
+    if (!refresh && destinations.value.some((d) => d.id === id)) {
+      return destinations.value.find((d) => d.id === id)!
+    }
+
     const { data, error } = await getResource<Destination>(`/destinations/${id}`)
     if (error) {
       errorStore.addError(error.message)
