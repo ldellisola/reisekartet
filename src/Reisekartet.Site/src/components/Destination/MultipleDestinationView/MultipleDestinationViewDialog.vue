@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import type { Destination } from '@/api/Models/Destination'
 import DestinationView from '@components/Destination/DestinationView.vue'
 import { getColor, isNullOrWhitespace } from '@/lib/StringFunctions'
+import Tag from '@components/Tag.vue'
 
 const destinationViewDialog = useMultipleDestinationViewDialog()
 
@@ -35,14 +36,7 @@ destinationViewDialog.onClose(close)
                     {{ item.raw.city }}, {{ item.raw.country }}
                   </v-card-subtitle>
                   <v-card-text>
-                    <v-chip
-                      class="ms-1"
-                      variant="flat"
-                      v-for="tag in item.raw.tags"
-                      :color="getColor(tag)"
-                    >
-                      {{ tag }}
-                    </v-chip>
+                    <Tag v-for="tag in item.raw.tags" :name="tag" />
                   </v-card-text>
                 </v-card>
               </v-col>

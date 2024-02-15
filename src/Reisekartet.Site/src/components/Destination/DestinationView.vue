@@ -3,6 +3,7 @@ import SingleDestinationLayer from '@components/Mapping/SingleDestinationLayer.v
 import { getColor, isNullOrWhitespace } from '@/lib/StringFunctions'
 import Map from '@components/Mapping/Map.vue'
 import type { Destination } from '@/api/Models/Destination'
+import Tag from '@components/Tag.vue'
 
 defineProps<{
   destination: Destination
@@ -13,9 +14,7 @@ defineProps<{
   <v-card class="mx-auto w-75">
     <v-card-title>{{ destination?.name }}</v-card-title>
     <v-card-subtitle>
-      <v-chip class="ms-1" variant="flat" v-for="tag in destination?.tags" :color="getColor(tag)">
-        {{ tag }}
-      </v-chip>
+      <Tag v-for="tag in destination?.tags" :name="tag" />
     </v-card-subtitle>
     <v-card-text>
       <v-row>
@@ -66,4 +65,8 @@ defineProps<{
   </v-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+.v-card-subtitle {
+  opacity: unset;
+}
+</style>
