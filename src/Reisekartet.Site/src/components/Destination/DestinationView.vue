@@ -1,13 +1,26 @@
 <script lang="ts" setup>
 import SingleDestinationLayer from '@components/Mapping/SingleDestinationLayer.vue'
-import { getColor, isNullOrWhitespace } from '@/lib/StringFunctions'
+import { isNullOrWhitespace } from '@/lib/StringFunctions'
 import Map from '@components/Mapping/Map.vue'
 import type { Destination } from '@/api/Models/Destination'
 import Tag from '@components/Tag.vue'
+import { useDestinationStore } from '@store/Destinations'
+import { useDestinationViewDialog } from '@components/Destination/DestinationViewDialog/DestinationView.Dialog'
+import { useMultipleDestinationViewDialog } from '@components/Destination/MultipleDestinationView/MultipleDestinationView.Dialog'
+
+const destinations = useDestinationStore()
+const destinationViewDialog = useDestinationViewDialog()
+const multipleDestinationViewDialog = useMultipleDestinationViewDialog()
 
 defineProps<{
   destination: Destination
 }>()
+
+async function deleteDestination(id: string) {
+  await destinations.remove(id)
+  destinationViewDialog.close()
+  multipleDestinationViewDialog.close()
+}
 </script>
 
 <template>
@@ -58,9 +71,10 @@ defineProps<{
       >
         Open in Google Maps
       </v-btn>
-      <router-link :to="`/destination/${destination?.id}`">
+      <router-link :to="`/destination/${destination.id}`">
         <v-btn>Edit</v-btn>
       </router-link>
+      <v-btn @click="deleteDestination(destination.id)" color="error">Delete</v-btn>
     </v-card-actions>
   </v-card>
 </template>
