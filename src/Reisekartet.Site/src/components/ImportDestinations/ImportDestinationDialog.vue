@@ -12,7 +12,7 @@ const handleDrop = (e: DropEvent) => {
 </script>
 
 <template>
-  <v-dialog v-model="store.isOpen" width="100%">
+  <v-dialog v-model="store.isOpen">
     <template v-slot:activator="{ props }">
       <v-btn elevation="10" color="primary" v-bind="props">Import Destinations</v-btn>
     </template>

@@ -11,7 +11,7 @@ defineProps<{
 </script>
 
 <template>
-  <v-card class="mx-auto w-75">
+  <v-card class="mx-auto w-100">
     <v-card-title>{{ destination?.name }}</v-card-title>
     <v-card-subtitle>
       <Tag v-for="tag in destination?.tags" :name="tag" />

@@ -18,9 +18,9 @@ destinationViewDialog.onClose(close)
 </script>
 
 <template>
-  <v-dialog class="h-100" v-model="destinationViewDialog.isOpen">
+  <v-dialog class="h-100 w-75" v-model="destinationViewDialog.isOpen">
     <DestinationView v-if="selectedDestination !== undefined" :destination="selectedDestination!" />
-    <v-card class="mx-auto w-75 h-100" v-else>
+    <v-card class="mx-auto w-100 h-100" v-else>
       <v-card-text>
         <v-data-iterator :items="destinationViewDialog.destinations" items-per-page="100">
           <template v-slot:default="{ items }">

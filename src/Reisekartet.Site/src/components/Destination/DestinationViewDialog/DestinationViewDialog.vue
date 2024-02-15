@@ -6,7 +6,11 @@ const destinationViewDialog = useDestinationViewDialog()
 </script>
 
 <template>
-  <v-dialog @close="destinationViewDialog.close()" v-model="destinationViewDialog.isOpen">
+  <v-dialog
+    class="w-75"
+    @close="destinationViewDialog.close()"
+    v-model="destinationViewDialog.isOpen"
+  >
     <DestinationView
       v-if="destinationViewDialog.destination !== undefined"
       :destination="destinationViewDialog.destination!"
