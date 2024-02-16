@@ -5,28 +5,21 @@ import type { ReisekartetError } from '@/api/reisekartetClient'
 import { deleteResource, getResource, postResource, putResource } from '@/api/reisekartetClient'
 import { computed, ref } from 'vue'
 import { groupBy } from '@/lib/ArrayFunctions'
-import type { Filters } from '@components/Filters/Filters.dialog'
-import { containsIgnoreCase } from '@/lib/StringFunctions'
 import type { Tag } from '@/api/Models/Tag'
 
 export const useDestinationStore = defineStore('Destinations', () => {
   const errorStore = useErrorStore()
-  const filters = ref<Filters>({
-    name: '',
-    tags: [],
-    city: '',
-    country: ''
-  })
+  const filter = ref<{ text: string; type: 'city' | 'country' | 'name' } | null>(null)
 
   const destinations = ref<Destination[]>([])
 
   const all = computed(() =>
     destinations.value.filter(
       ({ name, tags, city, country }) =>
-        containsIgnoreCase(name, filters.value.name) &&
-        containsIgnoreCase(city, filters.value.city) &&
-        containsIgnoreCase(country, filters.value.country) &&
-        filters.value.tags.every((t) => tags.includes(t))
+        !filter.value ||
+        (filter.value.type === 'city' && city === filter.value.text) ||
+        (filter.value.type === 'country' && country === filter.value.text) ||
+        (filter.value.type === 'name' && name === filter.value.text)
     )
   )
   const destinationTypes = ref<string[]>([])
@@ -133,8 +126,8 @@ export const useDestinationStore = defineStore('Destinations', () => {
     destinations.value = destinations.value.filter((d) => d.id !== id)
   }
 
-  function setFilters(newFilters: Filters) {
-    filters.value = newFilters
+  function setFilters(text: string | null, type: 'city' | 'country' | 'name') {
+    filter.value = text ? { text, type: type! } : null
   }
 
   async function get(id: string, refresh: boolean = false): Promise<Destination | undefined> {
