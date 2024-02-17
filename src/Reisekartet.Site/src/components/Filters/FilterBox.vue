@@ -78,7 +78,6 @@ onUnmounted(() => {
 
 <template>
   <v-autocomplete
-    class="w-100"
     ref="searchBox"
     v-model="model"
     :items="items"
@@ -92,6 +91,7 @@ onUnmounted(() => {
     @focus="loadFilterSuggestions"
     @click="loadFilterSuggestions"
     auto-select-first
+    clearable
     :custom-filter="compareItems"
     @update:model-value="(value) => destinationStore.setFilters(value)"
   >

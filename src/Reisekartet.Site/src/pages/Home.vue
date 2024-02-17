@@ -3,19 +3,20 @@
   <MultipleDestinationViewDialog />
   <v-container>
     <v-row>
-      <v-col cols="3">
+      <v-col cols="12" sm="4" md="3" lg="2" xl="1" class="d-flex align-center py-1">
         <v-btn @click="router.push('/destination')" elevation="10" color="primary"
-          >Add Destination</v-btn
+          >New Destination</v-btn
         >
       </v-col>
 
-      <v-col cols="4" class="text-left">
+      <v-col cols="12" sm="5" md="3" lg="3" xl="2" class="d-flex align-center py-1">
         <ImportDestinationDialog />
       </v-col>
 
-      <v-col class="text-right" cols="5">
+      <v-spacer></v-spacer>
+
+      <v-col cols="12" sm="12" md="12" lg="7" xl="9" class="d-flex justify-end py-1">
         <FilterBox />
-        <!--        <Filters />-->
       </v-col>
     </v-row>
     <v-row>
@@ -57,14 +58,4 @@ await destinations.refresh()
 const router = useRouter()
 </script>
 
-<style scoped>
-.v-col {
-  padding-bottom: 0 !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-.v-row {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-</style>
+<style scoped></style>
