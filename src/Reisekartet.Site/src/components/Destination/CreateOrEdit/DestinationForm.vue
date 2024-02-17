@@ -66,7 +66,7 @@ const rules = {
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col cols="12" sm="6">
           <v-text-field
             hide-details="auto"
             validate-on="lazy blur"
@@ -76,7 +76,7 @@ const rules = {
             v-model="form.name"
           />
         </v-col>
-        <v-col>
+        <v-col cols="12" sm="6">
           <v-text-field hide-details :variant="variant" label="Website" v-model="form.website" />
         </v-col>
       </v-row>
@@ -101,7 +101,7 @@ const rules = {
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col cols="12" sm="2">
           <v-select
             label="Type"
             hide-details
@@ -111,7 +111,7 @@ const rules = {
             @update:menu="parseLocation"
           ></v-select>
         </v-col>
-        <v-col cols="10">
+        <v-col cols="12" sm="10">
           <v-text-field
             label="Location"
             hide-details="auto"
@@ -123,10 +123,10 @@ const rules = {
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <v-text-field hide-details label="City" v-model="form.city" :variant="variant" />
         </v-col>
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <v-text-field hide-details label="Country" v-model="form.country" :variant="variant" />
         </v-col>
       </v-row>

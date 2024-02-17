@@ -31,7 +31,7 @@ async function deleteDestination(id: string) {
     </v-card-subtitle>
     <v-card-text>
       <v-row>
-        <v-col cols="3">
+        <v-col>
           <v-card class="elevation-2 fill-height">
             <v-card-title>Information</v-card-title>
             <v-card-text>
@@ -41,14 +41,6 @@ async function deleteDestination(id: string) {
                 <b>Website</b>:
                 <a :href="destination?.website!" target="_blank">{{ destination?.website }} </a>
               </p>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col v-if="!isNullOrWhitespace(destination?.description)">
-          <v-card class="elevation-2 fill-height">
-            <v-card-title>Description</v-card-title>
-            <v-card-text>
-              <p>{{ destination?.description }}</p>
             </v-card-text>
           </v-card>
         </v-col>

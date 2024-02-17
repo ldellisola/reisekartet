@@ -10,6 +10,14 @@ const destinationViewDialog = useMultipleDestinationViewDialog()
 
 const selectedDestination = ref<Destination | undefined>(undefined)
 
+const headers = [
+  { title: 'Name', key: 'name', width: '20%' },
+  { title: 'Tags', key: 'tags', width: '40%' },
+  { title: 'City', key: 'city', width: '20%' },
+  { title: 'Country', key: 'country', width: '10%' },
+  { title: 'Actions', key: 'actions', width: '25%', sortable: false }
+]
+
 function close() {
   selectedDestination.value = undefined
 }
@@ -22,27 +30,20 @@ destinationViewDialog.onClose(close)
     <DestinationView v-if="selectedDestination !== undefined" :destination="selectedDestination!" />
     <v-card class="mx-auto w-100 h-100" v-else>
       <v-card-text>
-        <v-data-iterator :items="destinationViewDialog.destinations" items-per-page="100">
-          <template v-slot:default="{ items }">
-            <v-row>
-              <v-col v-for="item in items" :key="item.raw.id" cols="12" sm="12" md="6">
-                <v-card @click="selectedDestination = item.raw">
-                  <v-card-title>{{ item.raw.name }}</v-card-title>
-                  <v-card-subtitle
-                    v-if="
-                      !isNullOrWhitespace(item.raw.country) && !isNullOrWhitespace(item.raw.city)
-                    "
-                  >
-                    {{ item.raw.city }}, {{ item.raw.country }}
-                  </v-card-subtitle>
-                  <v-card-text>
-                    <Tag v-for="tag in item.raw.tags" :name="tag" />
-                  </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
+        <v-data-table-virtual
+          height="500px"
+          :headers="headers"
+          fixed-header
+          hover
+          :items="destinationViewDialog.destinations"
+        >
+          <template v-slot:item.tags="{ value }">
+            <Tag v-for="tag in value" :key="tag" :name="tag" />
           </template>
-        </v-data-iterator>
+          <template v-slot:item.actions="{ item }">
+            <v-icon @click="selectedDestination = item">mdi-eye</v-icon>
+          </template>
+        </v-data-table-virtual>
       </v-card-text>
     </v-card>
   </v-dialog>

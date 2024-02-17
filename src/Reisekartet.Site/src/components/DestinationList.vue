@@ -4,6 +4,7 @@
     v-model:expanded="expanded"
     :items="destinations.filtered"
     class="elevation-10"
+    fixed-header
     show-expand
     height="600"
     :expand-on-click="true"
@@ -36,7 +37,7 @@
         <td :colspan="columns.length">
           <v-container>
             <v-row>
-              <v-col cols="3">
+              <v-col cols="12" md="3">
                 <v-card class="elevation-2 fill-height">
                   <v-card-title>Information</v-card-title>
                   <v-card-text>
@@ -50,7 +51,7 @@
                 </v-card>
               </v-col>
 
-              <v-col :cols="isNullOrWhitespace(item.description) ? 9 : 6">
+              <v-col cols="12" md="9">
                 <Map
                   :center="[item.longitude, item.latitude]"
                   :zoom="15"
