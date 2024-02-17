@@ -1,7 +1,26 @@
 <img src="./docs/images/reisekartet.png" width="200" height="200" alt="Reisekartet">
 
 # Reiserkartet
+
 Reisekartet (The travel map) is an open source travel destination manager built with Vue 3 and .NET 8.
+
+## Disclaimer
+
+This project is still in development and is not ready for production use.
+
+## Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+- [x] Create, edit and delete travel destinations.
+- [x] Use custom layers to display travel destinations.
+- [x] Advanced search for travel destinations.
+- [ ] User authentication.
 
 ## Installation
 
@@ -12,9 +31,10 @@ docker compose up
 ```
 
 ## Contributing
+
 1. Install:
-    - dotnet 8
-    - bun or npm
+   - dotnet 8
+   - bun or npm
 2. Fork the project.
 3. Create a new branch (`git checkout -b feature-branch`).
 4. Commit changes (`git commit -m 'Add feature'`).
