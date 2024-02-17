@@ -4,7 +4,7 @@
       <ol-source-vector>
         <ol-feature
           v-for="destination in destinations"
-          :key="destination.latitude * 2 + destination.longitude * 3"
+          :key="destination.id"
           :properties="{ type: type, id: destination.id }"
         >
           <ol-geom-point
@@ -19,7 +19,7 @@
       <ol-style-fill color="rgba(255,255,255,0.1)"></ol-style-fill>
 
       <ol-style-circle :radius="10">
-        <ol-style-fill :color="color"></ol-style-fill>
+        <ol-style-fill :color="getColor(props.type)"></ol-style-fill>
         <ol-style-stroke color="#fff" :width="1"></ol-style-stroke>
       </ol-style-circle>
       <ol-style-text>
@@ -46,6 +46,4 @@ const overrideStyleFunction = (feature: any, style: any) => {
   let size = clusteredFeatures.length
   style.getText().setText(size.toString())
 }
-
-const color = getColor(props.type)
 </script>

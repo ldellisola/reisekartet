@@ -3,7 +3,10 @@ export function isNullOrWhitespace(input: string | null | undefined): boolean {
   return input.trim().length === 0
 }
 
+const colorMap: { [key: string]: string } = {}
+
 export function getColor(str: string): string {
+  if (colorMap[str]) return colorMap[str]
   let hash = 0
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash)
@@ -14,7 +17,7 @@ export function getColor(str: string): string {
     const value = (hash >> (i * 8)) & 0xff
     color += ('00' + value.toString(16)).slice(-2)
   }
-
+  colorMap[str] = color
   return color
 }
 

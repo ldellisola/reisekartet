@@ -3,18 +3,20 @@
   <MultipleDestinationViewDialog />
   <v-container>
     <v-row>
-      <v-col cols="2">
+      <v-col cols="12" sm="4" md="3" lg="2" xl="1" class="d-flex align-center py-1">
         <v-btn @click="router.push('/destination')" elevation="10" color="primary"
-          >Add Destination</v-btn
+          >New Destination</v-btn
         >
       </v-col>
 
-      <v-col cols="8" class="text-left">
+      <v-col cols="12" sm="5" md="3" lg="3" xl="2" class="d-flex align-center py-1">
         <ImportDestinationDialog />
       </v-col>
 
-      <v-col class="text-right" cols="2">
-        <Filters />
+      <v-spacer></v-spacer>
+
+      <v-col cols="12" sm="12" md="12" lg="7" xl="9" class="d-flex justify-end py-1">
+        <FilterBox />
       </v-col>
     </v-row>
     <v-row>
@@ -45,25 +47,15 @@ import Map from '@components/Mapping/Map.vue'
 import DestinationList from '@components/DestinationList.vue'
 import DestinationLayer from '@components/Mapping/MultipleDestinationsLayer.vue'
 import { useDestinationStore } from '@store/Destinations'
-import Filters from '@components/Filters/FiltersDialog.vue'
 import ImportDestinationDialog from '@components/ImportDestinations/ImportDestinationDialog.vue'
 import DestinationViewDialog from '@components/Destination/DestinationViewDialog/DestinationViewDialog.vue'
 import MultipleDestinationViewDialog from '@components/Destination/MultipleDestinationView/MultipleDestinationViewDialog.vue'
 import { useRouter } from 'vue-router'
+import FilterBox from '@components/Filters/FilterBox.vue'
 const destinations = useDestinationStore()
 await destinations.refresh()
 
 const router = useRouter()
 </script>
 
-<style scoped>
-.v-col {
-  padding-bottom: 0 !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-.v-row {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-</style>
+<style scoped></style>
