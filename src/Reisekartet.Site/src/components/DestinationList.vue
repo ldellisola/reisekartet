@@ -2,7 +2,7 @@
   <v-data-table-virtual
     :headers="headers"
     v-model:expanded="expanded"
-    :items="destinations.all"
+    :items="destinations.filtered"
     class="elevation-10"
     show-expand
     height="600"
@@ -29,9 +29,7 @@
       </v-row>
     </template>
     <template v-slot:item.tags="{ value }">
-      <v-chip class="ms-1" variant="flat" v-for="tag in value" :color="getColor(tag)">
-        {{ tag }}
-      </v-chip>
+      <Tag v-for="tag in value" :key="tag" :name="tag" />
     </template>
     <template v-slot:expanded-row="{ columns, item }">
       <tr>
@@ -77,6 +75,7 @@ import { ref, watch } from 'vue'
 import Map from '@components/Mapping/Map.vue'
 import SingleDestinationLayer from '@components/Mapping/SingleDestinationLayer.vue'
 import { useRouter } from 'vue-router'
+import Tag from '@components/Tag.vue'
 const destinations = useDestinationStore()
 const router = useRouter()
 

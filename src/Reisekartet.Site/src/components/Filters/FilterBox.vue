@@ -2,11 +2,7 @@
 import { useDestinationStore } from '@store/Destinations'
 import type { Destination } from '@/api/Models/Destination'
 import { onMounted, onUnmounted, ref } from 'vue'
-
-interface SearchItem {
-  text: string
-  type: 'city' | 'country' | 'name'
-}
+import type { SearchItem } from '@/types/SearchItem'
 
 const destinationStore = useDestinationStore()
 
@@ -26,7 +22,7 @@ function focusOnSearch(event: KeyboardEvent) {
 }
 async function loadFilterSuggestions() {
   isLoading.value = true
-  if (destinationStore.all.length === 0) {
+  if (destinationStore.destinations.length === 0) {
     await destinationStore.refresh()
   }
 
@@ -34,7 +30,7 @@ async function loadFilterSuggestions() {
     return
   }
 
-  const all = destinationStore.all.flatMap((destination: Destination) => {
+  const all = destinationStore.destinations.flatMap((destination: Destination) => {
     let filterValues = [{ text: destination.name, type: 'name' }]
     if (destination.country) {
       filterValues.push({ text: destination.country, type: 'country' })
@@ -44,7 +40,13 @@ async function loadFilterSuggestions() {
     }
     return filterValues
   })
-  all.forEach((item: { text: string; type: 'city' | 'country' | 'name' }) => {
+
+  items.value = destinationStore.destinationTypes.map((type: string) => ({
+    text: type,
+    type: 'tag'
+  }))
+
+  all.forEach((item: SearchItem) => {
     if (!items.value.some((i) => i.text === item.text)) {
       items.value.push(item)
     }
@@ -84,26 +86,24 @@ onUnmounted(() => {
     item-title="text"
     item-text="text"
     :loading="isLoading"
-    label="Filter"
+    label="Search destinations"
     return-object
+    variant="solo-filled"
     @focus="loadFilterSuggestions"
     @click="loadFilterSuggestions"
-    prepend-icon="mdi-magnify"
     auto-select-first
     :custom-filter="compareItems"
-    @update:model-value="(value) => destinationStore.setFilters(value?.text, value?.type)"
+    @update:model-value="(value) => destinationStore.setFilters(value)"
   >
     <template v-slot:item="{ props, item }">
-      <v-list-item>
+      <v-list-item v-bind="props">
         <template v-slot:prepend>
           <v-icon v-if="item.raw.type === 'city'">mdi-city</v-icon>
           <v-icon v-else-if="item.raw.type === 'country'">mdi-earth</v-icon>
           <v-icon v-else-if="item.raw.type === 'name'">mdi-map-marker</v-icon>
+          <v-icon v-else-if="item.raw.type === 'tag'">mdi-tag</v-icon>
           <v-icon v-else>mdi-help-circle </v-icon>
         </template>
-        <v-list-item-title
-          ><p class="text-wrap">{{ item.raw.text }}</p></v-list-item-title
-        >
       </v-list-item>
     </template>
   </v-autocomplete>
