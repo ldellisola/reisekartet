@@ -23,7 +23,14 @@ export const useDestinationForm = defineStore('DestinationForm', () => {
   const location = ref<PlaceLocation | null>(null)
 
   async function TryParseCoordinates(coordinates: string): Promise<boolean> {
-    const parts = coordinates.replace('[', '').replace(']', '').replace(' ', '').split(',')
+    const parts = coordinates
+      .replace('[', '')
+      .replace(']', '')
+      .replace(' ', '')
+      .replace('( ', '')
+      .replace(' )', '')
+      .split(',')
+
     if (parts.length != 2) {
       return false
     }
