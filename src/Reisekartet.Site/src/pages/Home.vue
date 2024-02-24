@@ -3,7 +3,7 @@
   <MultipleDestinationViewDialog />
   <v-container>
     <v-row>
-      <v-col cols="12" sm="4" md="3" lg="2" xl="1" class="d-flex align-center py-1">
+      <v-col cols="12" sm="4" md="3" lg="2" xl="2" class="d-flex align-center py-1">
         <v-btn @click="router.push('/destination')" elevation="10" color="primary"
           >New Destination</v-btn
         >
@@ -15,7 +15,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-col cols="12" sm="12" md="12" lg="7" xl="9" class="d-flex justify-end py-1">
+      <v-col cols="12" sm="12" md="12" lg="7" xl="8" class="d-flex justify-end py-1">
         <FilterBox />
       </v-col>
     </v-row>
