@@ -13,11 +13,11 @@ export const useDestinationForm = defineStore('DestinationForm', () => {
 
   const id = ref<string | null>(null)
   const name = ref<string>('')
-  const website = ref<string | null>(null)
-  const city = ref<string | null>(null)
+  const website = ref<string | undefined>(undefined)
+  const city = ref<string | undefined>(undefined)
   const tags = ref<string[]>([])
-  const country = ref<string | null>(null)
-  const description = ref<string | null>(null)
+  const country = ref<string | undefined>(undefined)
+  const description = ref<string | undefined>(undefined)
   const locationString = ref<string>('')
   const locationMode = ref<(typeof locationModes)[number]>('Smart')
   const location = ref<PlaceLocation | null>(null)
@@ -45,8 +45,8 @@ export const useDestinationForm = defineStore('DestinationForm', () => {
     )
 
     if (error || !data || data.locations.length === 0) {
-      city.value = null
-      country.value = null
+      city.value = undefined
+      country.value = undefined
     } else {
       city.value = data.locations[0].city
       country.value = data.locations[0].country
@@ -91,8 +91,8 @@ export const useDestinationForm = defineStore('DestinationForm', () => {
   async function parseLocation(): Promise<PlaceLocation | null> {
     if (isNullOrWhitespace(locationString.value)) {
       location.value = null
-      city.value = null
-      country.value = null
+      city.value = undefined
+      country.value = undefined
       return null
     }
 
@@ -123,8 +123,8 @@ export const useDestinationForm = defineStore('DestinationForm', () => {
 
     if (!isValid) {
       location.value = null
-      city.value = null
-      country.value = null
+      city.value = undefined
+      country.value = undefined
     }
 
     return location.value
@@ -200,11 +200,11 @@ export const useDestinationForm = defineStore('DestinationForm', () => {
   function clear() {
     id.value = null
     name.value = ''
-    website.value = null
-    city.value = null
+    website.value = undefined
+    city.value = undefined
     tags.value = []
-    country.value = null
-    description.value = null
+    country.value = undefined
+    description.value = undefined
     locationString.value = ''
     location.value = null
   }

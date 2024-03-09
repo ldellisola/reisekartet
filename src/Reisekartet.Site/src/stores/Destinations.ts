@@ -10,31 +10,23 @@ import type { SearchItem } from '@/types/SearchItem'
 
 export const useDestinationStore = defineStore('Destinations', () => {
   const errorStore = useErrorStore()
-  const filter = ref<SearchItem | null>(null)
-
   const destinations = ref<Destination[]>([])
+  const filters = ref<string>('[]')
 
-  const filtered = computed(() =>
-    destinations.value.filter(
-      ({ name, tags, city, country }) =>
-        !filter.value ||
-        (filter.value.type === 'city' && city === filter.value.text) ||
-        (filter.value.type === 'country' && country === filter.value.text) ||
-        (filter.value.type === 'name' && name === filter.value.text) ||
-        (filter.value.type === 'tag' && tags.includes(filter.value.text))
-    )
-  )
   const destinationTypes = ref<string[]>([])
 
-  const byType = computed(() => groupBy(filtered.value, (d) => d.tags[0]))
+  const filteredDestinations = computed(() => destinations.value)
+  const byType = computed(() => groupBy(destinations.value, (d) => d.tags[0]))
 
   async function refresh() {
-    const destinationsPayload = await getResource<{ destinations: Destination[] }>('/destinations')
-    if (destinationsPayload.error) {
-      console.log('Bad')
+    const { data, error } = await getResource<{ destinations: Destination[] }>(
+      `/destinations?filters=${filters.value}`
+    )
+    if (error) {
+      console.error('Bad')
       return
     }
-    destinations.value = destinationsPayload.data!.destinations
+    destinations.value = data!.destinations
 
     await refreshTags()
   }
@@ -42,7 +34,7 @@ export const useDestinationStore = defineStore('Destinations', () => {
   async function refreshTags(): Promise<Tag[] | undefined> {
     const tagsPayload = await getResource<{ tags: Tag[] }>('/tags')
     if (tagsPayload.error) {
-      console.log('Bad')
+      console.error('Bad')
       return undefined
     }
     destinationTypes.value = tagsPayload.data!.tags.map((t) => t.name)
@@ -52,12 +44,12 @@ export const useDestinationStore = defineStore('Destinations', () => {
   async function create(
     name: string,
     tags: string[],
-    website: string | null,
+    website: string | undefined,
     latitude: number,
     longitude: number,
-    city: string | null,
-    country: string | null,
-    description: string | null
+    city: string | undefined,
+    country: string | undefined,
+    description: string | undefined
   ): Promise<ReisekartetError | null> {
     const { error } = await postResource('/destinations', {
       name,
@@ -87,12 +79,12 @@ export const useDestinationStore = defineStore('Destinations', () => {
     id: string,
     name: string,
     tags: string[],
-    website: string | null,
+    website: string | undefined,
     latitude: number,
     longitude: number,
-    city: string | null,
-    country: string | null,
-    description: string | null
+    city: string | undefined,
+    country: string | undefined,
+    description: string | undefined
   ): Promise<ReisekartetError | null> {
     const { error } = await putResource(`/destinations/${id}`, {
       name,
@@ -128,8 +120,9 @@ export const useDestinationStore = defineStore('Destinations', () => {
     destinations.value = destinations.value.filter((d) => d.id !== id)
   }
 
-  function setFilters(newFilter: SearchItem | null) {
-    filter.value = newFilter
+  async function setFilters(newFilter: SearchItem[]) {
+    filters.value = JSON.stringify(newFilter.map((f) => ({ Text: f.text, Type: f.type })))
+    await refresh()
   }
 
   async function get(id: string, refresh: boolean = false): Promise<Destination | undefined> {
@@ -147,8 +140,7 @@ export const useDestinationStore = defineStore('Destinations', () => {
   }
 
   return {
-    destinations,
-    filtered,
+    filteredDestinations,
     byType,
     destinationTypes,
     refresh,

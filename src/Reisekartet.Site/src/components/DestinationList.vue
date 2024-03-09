@@ -2,7 +2,7 @@
   <v-data-table-virtual
     :headers="headers"
     v-model:expanded="expanded"
-    :items="destinations.filtered"
+    :items="destinations.filteredDestinations"
     class="elevation-10"
     fixed-header
     show-expand
@@ -14,12 +14,7 @@
         <a
           style="color: inherit"
           @click="oldId = item.id"
-          :href="
-            'https://www.google.com/maps/search/?api=1&query=' +
-            item.latitude +
-            ',' +
-            item.longitude
-          "
+          :href="`https://www.google.com/maps/search/?api=1&query=${item.latitude},${item.longitude}`"
           target="_blank"
         >
           <v-icon>mdi-map-marker</v-icon>
