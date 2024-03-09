@@ -6,9 +6,9 @@ export interface PlaceLocation {
 export interface Destination extends PlaceLocation {
   id: string
   name: string
-  city: string | null
-  country: string | null
+  city?: string
+  country?: string
   tags: string[]
-  website: string | null
-  description: string | null
+  website?: string
+  description?: string
 }

@@ -1,4 +1,5 @@
 export interface SearchItem {
   text: string
-  type: 'city' | 'country' | 'name' | 'tag'
+  normalizedText: string
+  type: 'City' | 'Country' | 'Name' | 'Tag'
 }

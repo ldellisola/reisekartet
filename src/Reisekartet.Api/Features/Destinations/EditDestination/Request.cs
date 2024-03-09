@@ -35,7 +35,9 @@ internal sealed class RequestValidator : Validator<Request>
             .MaximumLength(200)
             .WithMessage("Website must be at most 200 characters long")
             .Matches(@"^https?://")
-            .WithMessage("Website must be a valid URL");
+            .WithMessage("Website must be a valid URL")
+            .When(t=> !string.IsNullOrWhiteSpace(t.Website))
+            ;
 
         RuleFor(t => t.Tags)
             .NotEmpty()
