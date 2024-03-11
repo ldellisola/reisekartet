@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import type { PlaceLocation } from '@/api/Models/Destination'
 import { getResource } from '@/api/reisekartetClient'
 import type GeocodedLocation from '@/api/Models/GeocodedLocation'
-import { isNullOrWhitespace } from '@/lib/StringFunctions'
+import { isNullOrWhitespace, stripChars } from '@/lib/StringFunctions'
 import { useDestinationStore } from '@store/Destinations'
 
 export const useDestinationForm = defineStore('DestinationForm', () => {
@@ -23,13 +23,7 @@ export const useDestinationForm = defineStore('DestinationForm', () => {
   const location = ref<PlaceLocation | null>(null)
 
   async function TryParseCoordinates(coordinates: string): Promise<boolean> {
-    const parts = coordinates
-      .replace('[', '')
-      .replace(']', '')
-      .replace(' ', '')
-      .replace('( ', '')
-      .replace(' )', '')
-      .split(',')
+    const parts = stripChars(coordinates, '[]() ').split(',')
 
     if (parts.length != 2) {
       return false

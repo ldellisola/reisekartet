@@ -4,9 +4,9 @@
   <v-container>
     <v-row>
       <v-col cols="12" sm="4" md="3" lg="2" xl="2" class="d-flex align-center py-1">
-        <v-btn @click="router.push('/destination')" elevation="10" color="primary"
-          >New Destination</v-btn
-        >
+        <router-link to="/destination">
+          <v-btn elevation="10" color="primary">New Destination</v-btn>
+        </router-link>
       </v-col>
 
       <v-col cols="12" sm="5" md="3" lg="3" xl="2" class="d-flex align-center py-1">
@@ -50,12 +50,11 @@ import { useDestinationStore } from '@store/Destinations'
 import ImportDestinationDialog from '@components/ImportDestinations/ImportDestinationDialog.vue'
 import DestinationViewDialog from '@components/Destination/DestinationViewDialog/DestinationViewDialog.vue'
 import MultipleDestinationViewDialog from '@components/Destination/MultipleDestinationView/MultipleDestinationViewDialog.vue'
-import { useRouter } from 'vue-router'
 import FilterBox from '@components/Filters/FilterBox.vue'
+
 const destinations = useDestinationStore()
 await destinations.refresh()
 
-const router = useRouter()
 </script>
 
 <style scoped></style>

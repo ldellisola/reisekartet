@@ -75,8 +75,7 @@ export const useDestinationStore = defineStore('Destinations', () => {
     return null
   }
 
-  async function update(
-    id: string,
+  async function update(id: string,
     name: string,
     tags: string[],
     website: string | undefined,

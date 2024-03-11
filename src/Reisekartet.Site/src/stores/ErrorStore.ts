@@ -1,12 +1,9 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 export const useErrorStore = defineStore('ErrorStore', () => {
   const _errors = ref<string[]>([])
-
-  function hasErrors(): boolean {
-    return _errors.value.length > 0
-  }
+  const hasErrors = computed(() => _errors.value.length > 0)
 
   function clear() {
     _errors.value = []

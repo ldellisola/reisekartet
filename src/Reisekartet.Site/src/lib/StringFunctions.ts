@@ -30,3 +30,10 @@ export function containsIgnoreCase(
   if (isNullOrWhitespace(a)) return false
   return a!.toLocaleLowerCase().includes(b!.toLocaleLowerCase())
 }
+
+export function stripChars(str: string, chars: string): string {
+  return str
+    .split('')
+    .filter((c) => !chars.includes(c))
+    .join('')
+}

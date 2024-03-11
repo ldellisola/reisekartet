@@ -7,7 +7,7 @@
 
       <v-card-text>
         <v-list>
-          <v-list-item v-for="error in store.errors" :key="error">
+          <v-list-item v-for="error in errors" :key="error">
             <v-list-item-title>{{ error }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -15,7 +15,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" @click="store.clear()"> Close </v-btn>
+        <v-btn color="primary" @click="clear()"> Close </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -23,8 +23,8 @@
 
 <script setup lang="ts">
 import { useErrorStore } from '@/stores/ErrorStore'
-import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 
-const store = useErrorStore()
-const hasErrors = computed(() => store.hasErrors())
+const { hasErrors, errors } = storeToRefs(useErrorStore())
+const { clear } = useErrorStore()
 </script>

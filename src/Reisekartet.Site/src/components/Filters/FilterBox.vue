@@ -7,11 +7,23 @@ import { useFilters } from '@components/Filters/FilterStore'
 import { storeToRefs } from 'pinia'
 
 const destinationStore = useDestinationStore()
-
-const { isLoading, selectedFilters, possibleFilters } = storeToRefs(useFilters())
-const { loadFilterSuggestions } = useFilters()
+const { selectedFilters } = storeToRefs(useFilters())
 
 const searchBox = ref<HTMLElement | null>(null)
+const possibleFilters = ref<SearchItem[]>([])
+const isLoading = ref(false)
+
+async function loadFilterSuggestions() {
+  isLoading.value = true
+  const { data, error } = await getResource<{ filters: SearchItem[] }>('/filters')
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  possibleFilters.value = data!.filters
+  isLoading.value = false
+}
 
 function focusOnSearch(event: KeyboardEvent) {
   if ((event.ctrlKey || event.metaKey) && event.key === 'f') {
@@ -84,10 +96,4 @@ onUnmounted(() => {
   </v-autocomplete>
 </template>
 
-<style scoped>
-.text-wrap {
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-</style>
+<style scoped></style>
