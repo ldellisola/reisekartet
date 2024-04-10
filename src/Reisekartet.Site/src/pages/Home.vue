@@ -54,7 +54,6 @@ import FilterBox from '@components/Filters/FilterBox.vue'
 
 const destinations = useDestinationStore()
 await destinations.refresh()
-
 </script>
 
 <style scoped></style>
