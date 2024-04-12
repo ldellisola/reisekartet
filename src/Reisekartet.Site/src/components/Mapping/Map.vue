@@ -1,6 +1,5 @@
 <template>
-  <DestinationViewDialog @close="clearSelection" :destinationId="singleDestination" />
-  <MultipleDestinationViewDialog @close="clearSelection" :destinationIds="multipleDestinationIds" />
+  <DestinationViewDialog @close="clearSelection" :destinationIds="selectedDestinationIds" />
   <div id="map"></div>
 </template>
 
@@ -9,9 +8,8 @@ import 'ol/ol.css'
 import { useConfiguration } from '@/stores/Configuration'
 import { useDestinationStore } from '@/stores/Destinations'
 import useOpenLayers from '@/composables/useOpenLayers'
-import { computed, ref, watch } from 'vue'
-import DestinationViewDialog from '../Destination/DestinationViewDialog/DestinationViewDialog.vue'
-import MultipleDestinationViewDialog from '../Destination/MultipleDestinationView/MultipleDestinationViewDialog.vue'
+import { ref, watch } from 'vue'
+import DestinationViewDialog from '@components/Destination/DestinationView/DestinationViewDialog.vue'
 
 export interface MapProps {
   center?: [number, number]
@@ -25,14 +23,6 @@ const props = withDefaults(defineProps<MapProps>(), {
 })
 
 const selectedDestinationIds = ref<string[]>([])
-
-const singleDestination = computed(() =>
-  selectedDestinationIds.value.length === 1 ? selectedDestinationIds.value[0] : undefined
-)
-
-const multipleDestinationIds = computed(() => {
-  return selectedDestinationIds.value.length > 1 ? selectedDestinationIds.value : undefined
-})
 
 const configuration = useConfiguration()
 await configuration.load()
@@ -53,7 +43,6 @@ function clearSelection() {
 }
 
 function onDestinationSelected(destinationIds: string[]) {
-  console.log('selecting things', destinationIds)
   if (destinationIds.length === 0) selectedDestinationIds.value = []
   if (destinationIds.length > 0) selectedDestinationIds.value = destinationIds
 }
@@ -75,3 +64,4 @@ watch(
   height: 800px;
 }
 </style>
+../Destination/DestinationView/MultipleDestinationViewDialog.vue

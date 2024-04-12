@@ -17,7 +17,6 @@ const emit = defineEmits<{
 }>()
 
 async function deleteDestination(id: string) {
-  console.log('emitting close')
   await destinations.remove(id)
   emit('close')
 }

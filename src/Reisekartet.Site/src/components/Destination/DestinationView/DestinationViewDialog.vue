@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import type { Destination } from '@/api/Models/Destination'
-import DestinationView from '@components/Destination/DestinationView.vue'
+import DestinationView from '@components/Destination/DestinationView/DestinationView.vue'
 import Tag from '@components/Tag.vue'
 import { useDestinationStore } from '@/stores/Destinations'
 
 export interface MultipleDestinationViewDialogProps {
-  destinationIds?: string[]
+  destinationIds: string[]
 }
 
 const destinationStore = useDestinationStore()
@@ -34,19 +34,19 @@ function close() {
 watch(
   () => props.destinationIds,
   async (destinationIds) => {
-    console.log('destinationIds', destinationIds)
-    if (destinationIds === undefined) return
+    if (destinationIds.length === 0) return
 
     loading.value = true
     destinations.value = (await Promise.all(
       destinationIds.map((id) => destinationStore.get(id))
     )) as Destination[]
-  },
-  { immediate: true }
+
+    if (destinations.value.length === 1) selectedDestination.value = destinations.value[0]
+  }
 )
 
 const isOpen = computed(
-  () => props.destinationIds !== undefined && (!loading || destinations !== undefined)
+  () => props.destinationIds.length > 0 && (!loading || destinations !== undefined)
 )
 </script>
 

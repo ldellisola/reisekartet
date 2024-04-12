@@ -16,8 +16,6 @@ export const useDestinationStore = defineStore('Destinations', () => {
   const destinationTypes = ref<string[]>([])
 
   const filteredDestinations = computed(() => {
-    console.log('Filtering', filters.value)
-    console.log('Destinations', destinations.value)
     return destinations.value
   })
   const byType = computed(() => groupBy(destinations.value, (d) => d.tags[0]))
@@ -125,7 +123,6 @@ export const useDestinationStore = defineStore('Destinations', () => {
   }
 
   async function setFilters(newFilter: SearchItem[]) {
-    console.debug('Setting filters', newFilter)
     filters.value = JSON.stringify(newFilter.map((f) => ({ Text: f.text, Type: f.type })))
     await refresh()
   }
