@@ -5,29 +5,29 @@ import Map from '@components/Mapping/Map.vue'
 import type { Destination } from '@/api/Models/Destination'
 import Tag from '@components/Tag.vue'
 import { useDestinationStore } from '@store/Destinations'
-import { useDestinationViewDialog } from '@components/Destination/DestinationViewDialog/DestinationView.Dialog'
-import { useMultipleDestinationViewDialog } from '@components/Destination/MultipleDestinationView/MultipleDestinationView.Dialog'
 
 const destinations = useDestinationStore()
-const destinationViewDialog = useDestinationViewDialog()
-const multipleDestinationViewDialog = useMultipleDestinationViewDialog()
 
 defineProps<{
   destination: Destination
 }>()
 
+const emit = defineEmits<{
+  close: []
+}>()
+
 async function deleteDestination(id: string) {
+  console.log('emitting close')
   await destinations.remove(id)
-  destinationViewDialog.close()
-  multipleDestinationViewDialog.close()
+  emit('close')
 }
 </script>
 
 <template>
   <v-card class="mx-auto w-100">
-    <v-card-title>{{ destination?.name }}</v-card-title>
+    <v-card-title>{{ destination.name }}</v-card-title>
     <v-card-subtitle>
-      <Tag v-for="tag in destination?.tags" :name="tag" />
+      <Tag v-for="tag in destination.tags" :name="tag" />
     </v-card-subtitle>
     <v-card-text>
       <v-row>
@@ -35,11 +35,11 @@ async function deleteDestination(id: string) {
           <v-card class="elevation-2 fill-height">
             <v-card-title>Information</v-card-title>
             <v-card-text>
-              <p><b>Latitude</b>: {{ destination?.latitude }}</p>
-              <p><b>Longitude</b>: {{ destination?.longitude }}</p>
-              <p v-if="!isNullOrWhitespace(destination?.website)">
+              <p><b>Latitude</b>: {{ destination.latitude }}</p>
+              <p><b>Longitude</b>: {{ destination.longitude }}</p>
+              <p v-if="!isNullOrWhitespace(destination.website)">
                 <b>Website</b>:
-                <a :href="destination?.website!" target="_blank">{{ destination?.website }} </a>
+                <a :href="destination.website!" target="_blank">{{ destination.website }}</a>
               </p>
             </v-card-text>
           </v-card>

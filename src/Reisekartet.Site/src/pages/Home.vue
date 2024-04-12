@@ -1,6 +1,6 @@
 <template>
-  <DestinationViewDialog />
-  <MultipleDestinationViewDialog />
+  <!-- <DestinationViewDialog /> -->
+  <!-- <MultipleDestinationViewDialog /> -->
   <v-container>
     <v-row>
       <v-col cols="12" sm="4" md="3" lg="2" xl="2" class="d-flex align-center py-1">
@@ -48,8 +48,8 @@ import DestinationList from '@components/DestinationList.vue'
 import DestinationLayer from '@components/Mapping/MultipleDestinationsLayer.vue'
 import { useDestinationStore } from '@store/Destinations'
 import ImportDestinationDialog from '@components/ImportDestinations/ImportDestinationDialog.vue'
-import DestinationViewDialog from '@components/Destination/DestinationViewDialog/DestinationViewDialog.vue'
-import MultipleDestinationViewDialog from '@components/Destination/MultipleDestinationView/MultipleDestinationViewDialog.vue'
+// import DestinationViewDialog from '@components/Destination/DestinationViewDialog/DestinationViewDialog.vue'
+// import MultipleDestinationViewDialog from '@components/Destination/MultipleDestinationView/MultipleDestinationViewDialog.vue'
 import FilterBox from '@components/Filters/FilterBox.vue'
 
 const destinations = useDestinationStore()

@@ -4,7 +4,6 @@ import { getColor } from '@/lib/StringFunctions'
 import { Feature, Map, View } from 'ol'
 import { click } from 'ol/events/condition'
 import { Point } from 'ol/geom'
-import type Interaction from 'ol/interaction/Interaction'
 import Select from 'ol/interaction/Select'
 import type BaseLayer from 'ol/layer/Base'
 import TileLayer from 'ol/layer/Tile'
@@ -30,9 +29,20 @@ export interface OnFeatureProps {
 }
 
 export default function useOpenLayers(options: OpenLayersOptions) {
-  let destinationLayers: BaseLayer[] = []
-  let map: Map | undefined = undefined
-  const interactions: Interaction[] = []
+  const map = new Map({
+    layers: [
+      new TileLayer({
+        source: new XYZ({
+          url: options.tileServerUrl,
+          projection: options.projection
+        })
+      })
+    ],
+    view: new View({
+      center: options.center,
+      zoom: options.zoom
+    })
+  })
 
   function createDestinationLayer(destinations: Destination[]): BaseLayer {
     const styleCache: { [tag: string]: Style } = {}
@@ -80,9 +90,14 @@ export default function useOpenLayers(options: OpenLayersOptions) {
           distance: 40,
           source: new VectorSource({
             features: destinations.map((d: Destination) => {
-              return new Feature(
-                new Point(transform([d.longitude, d.latitude], 'EPSG:4326', options.projection))
-              )
+              return new Feature({
+                primaryTag: d.tags[0],
+                name: d.name,
+                id: d.id,
+                geometry: new Point(
+                  transform([d.longitude, d.latitude], 'EPSG:4326', options.projection)
+                )
+              })
             })
           })
         }),
@@ -116,11 +131,10 @@ export default function useOpenLayers(options: OpenLayersOptions) {
   }
 
   function loadDestinations(destinations: Destination[], enableClustering: boolean) {
-    destinationLayers = enableClustering
+    const destinationLayers = enableClustering
       ? createClusterLayer(destinations)
       : [createDestinationLayer(destinations)]
 
-    if (map === undefined) return
     map.setLayers([map.getLayers().item(0), ...destinationLayers])
   }
 
@@ -135,14 +149,33 @@ export default function useOpenLayers(options: OpenLayersOptions) {
   function onFeatureEvent({ selected, unselected }: OnFeatureProps) {
     const select = new Select({ condition: click })
     select.on('select', (event) => {
-      if (event.deselected.length > 0 && unselected !== undefined)
-        unselected(event.deselected.map((f: Feature) => f.get('id')))
+      const isClustered = map.getLayers().getArray().length > 2
 
-      if (event.selected.length > 0 && selected !== undefined)
-        selected(event.selected.map((f: Feature) => f.get('id')))
+      if (event.deselected.length > 0 && unselected !== undefined) {
+        if (isClustered) {
+          unselected(
+            event.deselected
+              .map((f: Feature) => f.get('features').map((f: Feature) => f.get('id')))
+              .flat()
+          )
+        } else {
+          unselected(event.deselected.map((f: Feature) => f.get('id')))
+        }
+      }
+
+      if (event.selected.length > 0 && selected !== undefined) {
+        if (isClustered) {
+          selected(
+            event.selected
+              .map((f: Feature) => f.get('features').map((f: Feature) => f.get('id')))
+              .flat()
+          )
+        } else {
+          selected(event.selected.map((f: Feature) => f.get('id')))
+        }
+      }
     })
-    if (map === undefined) interactions.push(select)
-    else map.addInteraction(select)
+    map.addInteraction(select)
   }
 
   /*
@@ -150,7 +183,6 @@ export default function useOpenLayers(options: OpenLayersOptions) {
    *
    */
   function clearFeatureSelection() {
-    if (map === undefined) return
     const select = map
       .getInteractions()
       .getArray()
@@ -158,25 +190,7 @@ export default function useOpenLayers(options: OpenLayersOptions) {
     select?.getFeatures().clear()
   }
 
-  onMounted(() => {
-    map = new Map({
-      target: options.target,
-      layers: [
-        new TileLayer({
-          source: new XYZ({
-            url: options.tileServerUrl,
-            projection: options.projection
-          })
-        }),
-        ...destinationLayers
-      ],
-      view: new View({
-        center: options.center,
-        zoom: options.zoom
-      })
-    })
-    interactions.forEach((i) => map?.addInteraction(i))
-  })
+  onMounted(() => map.setTarget(options.target))
 
   return { loadDestinations, onFeatureEvent, clearFeatureSelection }
 }

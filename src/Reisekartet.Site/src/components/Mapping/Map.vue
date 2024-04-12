@@ -1,4 +1,6 @@
 <template>
+  <DestinationViewDialog @close="clearSelection" :destinationId="singleDestination" />
+  <MultipleDestinationViewDialog @close="clearSelection" :destinationIds="multipleDestinationIds" />
   <div id="map"></div>
 </template>
 
@@ -7,9 +9,9 @@ import 'ol/ol.css'
 import { useConfiguration } from '@/stores/Configuration'
 import { useDestinationStore } from '@/stores/Destinations'
 import useOpenLayers from '@/composables/useOpenLayers'
-import { watch } from 'vue'
-import { useDestinationViewDialog } from '../Destination/DestinationViewDialog/DestinationView.Dialog'
-import { useMultipleDestinationViewDialog } from '../Destination/MultipleDestinationView/MultipleDestinationView.Dialog'
+import { computed, ref, watch } from 'vue'
+import DestinationViewDialog from '../Destination/DestinationViewDialog/DestinationViewDialog.vue'
+import MultipleDestinationViewDialog from '../Destination/MultipleDestinationView/MultipleDestinationViewDialog.vue'
 
 export interface MapProps {
   center?: [number, number]
@@ -22,12 +24,20 @@ const props = withDefaults(defineProps<MapProps>(), {
   zoom: 1
 })
 
+const selectedDestinationIds = ref<string[]>([])
+
+const singleDestination = computed(() =>
+  selectedDestinationIds.value.length === 1 ? selectedDestinationIds.value[0] : undefined
+)
+
+const multipleDestinationIds = computed(() => {
+  return selectedDestinationIds.value.length > 1 ? selectedDestinationIds.value : undefined
+})
+
 const configuration = useConfiguration()
 await configuration.load()
 
 const destinationStore = useDestinationStore()
-const destinationViewDialog = useDestinationViewDialog()
-const multipleDestinationViewDialog = useMultipleDestinationViewDialog()
 
 const { loadDestinations, onFeatureEvent, clearFeatureSelection } = useOpenLayers({
   target: 'map',
@@ -37,10 +47,15 @@ const { loadDestinations, onFeatureEvent, clearFeatureSelection } = useOpenLayer
   tileServerUrl: configuration.tileServer
 })
 
+function clearSelection() {
+  selectedDestinationIds.value = []
+  clearFeatureSelection()
+}
+
 function onDestinationSelected(destinationIds: string[]) {
-  if (destinationIds.length === 0) destinationViewDialog.close()
-  if (destinationIds.length === 1) destinationViewDialog.open(destinationIds[0])
-  if (destinationIds.length > 1) multipleDestinationViewDialog.open(destinationIds)
+  console.log('selecting things', destinationIds)
+  if (destinationIds.length === 0) selectedDestinationIds.value = []
+  if (destinationIds.length > 0) selectedDestinationIds.value = destinationIds
 }
 
 onFeatureEvent({
@@ -48,15 +63,8 @@ onFeatureEvent({
 })
 
 watch(
-  () => destinationViewDialog.isOpen,
-  (value) => {
-    if (!value) clearFeatureSelection()
-  }
-)
-
-watch(
   () => destinationStore.filteredDestinations,
-  (value) => loadDestinations(value, false),
+  (value) => loadDestinations(value, true),
   { immediate: true }
 )
 </script>
