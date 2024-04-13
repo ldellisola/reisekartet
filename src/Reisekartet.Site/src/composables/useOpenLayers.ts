@@ -29,6 +29,7 @@ export interface OnFeatureProps {
 }
 
 export default function useOpenLayers(options: OpenLayersOptions) {
+  console.log('center', options.center)
   const map = new Map({
     layers: [
       new TileLayer({
@@ -39,10 +40,11 @@ export default function useOpenLayers(options: OpenLayersOptions) {
       })
     ],
     view: new View({
-      center: options.center,
+      center: transform(options.center, 'EPSG:4326', options.projection),
       zoom: options.zoom
     })
   })
+  console.log('map', map)
 
   function createDestinationLayer(destinations: Destination[]): BaseLayer {
     const styleCache: { [tag: string]: Style } = {}

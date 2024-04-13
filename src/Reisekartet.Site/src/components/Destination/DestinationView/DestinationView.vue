@@ -5,10 +5,10 @@ import Map from '@components/Mapping/Map.vue'
 import type { Destination } from '@/api/Models/Destination'
 import Tag from '@components/Tag.vue'
 import { useDestinationStore } from '@store/Destinations'
+import useOpenLayers from '@/composables/useOpenLayers'
+import { useConfiguration } from '@/stores/Configuration'
 
-const destinations = useDestinationStore()
-
-defineProps<{
+const props = defineProps<{
   destination: Destination
 }>()
 
@@ -16,10 +16,24 @@ const emit = defineEmits<{
   close: []
 }>()
 
+const configuration = useConfiguration()
+const destinations = useDestinationStore()
+console.log(props.destination)
+console.log([props.destination.longitude, props.destination.latitude])
+const { loadDestinations } = useOpenLayers({
+  target: 'destination-map',
+  projection: configuration.projection,
+  center: [props.destination.longitude, props.destination.latitude],
+  zoom: 15,
+  tileServerUrl: configuration.tileServer
+})
+
 async function deleteDestination(id: string) {
   await destinations.remove(id)
   emit('close')
 }
+
+loadDestinations([props.destination], false)
 </script>
 
 <template>
@@ -45,14 +59,7 @@ async function deleteDestination(id: string) {
         </v-col>
       </v-row>
       <v-row>
-        <Map
-          :center="[destination?.longitude ?? 0, destination?.latitude ?? 0]"
-          :zoom="15"
-          :rotation="0"
-          style="width: 100%; height: 400px"
-        >
-          <SingleDestinationLayer :destination="destination!" />
-        </Map>
+        <div id="destination-map" style="width: 100%; height: 400px"></div>
       </v-row>
     </v-card-text>
     <v-card-actions>
