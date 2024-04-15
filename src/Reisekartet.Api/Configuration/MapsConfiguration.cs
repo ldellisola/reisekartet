@@ -20,6 +20,6 @@ public class MapsConfigurationSetup(IConfiguration configuration) : IConfigureOp
         options.Projection = configuration.GetValue<string>("PROJECTION") ?? configuration.GetValue<string>("Maps:Projection") ?? "EPSG:3857";
         options.UseCache = configuration.GetValue<bool>("USE_TILE_SERVER_CACHE") || configuration.GetValue<bool>("Maps:UseCache");
         options.RedisConnectionString = configuration.GetValue<string>("REDIS_CONNECTION_STRING") ?? configuration.GetConnectionString("Redis");
-        options.CacheDuration = configuration.GetValue<string>("CACHE_DURATION")?.ToTimeSpan() ?? TimeSpan.FromDays(1);
+        options.CacheDuration = configuration.GetValue<string>("CACHE_DURATION")?.ToTimeSpan() ?? configuration.GetValue<string>("Maps:CacheDuration")?.ToTimeSpan() ?? TimeSpan.FromDays(1);
     }
 }

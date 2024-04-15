@@ -1,123 +1,66 @@
 <template>
-  <ol-map
-    ref="mapRef"
-    :loadTilesWhileAnimating="true"
-    :loadTilesWhileInteracting="true"
-    height="100%"
-    style="height: 800px"
-    :controls="[]"
-  >
-    <ol-view
-      ref="view"
-      :center="transform(center ?? [0, 0], 'EPSG:4326', projection)"
-      :zoom="zoom"
-      :rotation="rotation"
-      :projection="projection"
-    />
-    <ol-tile-layer>
-      <ol-source-osm :url="configuration.tileServer" />
-    </ol-tile-layer>
-
-    <ol-interaction-select
-      @select="featureSelected"
-      :condition="selectCondition"
-      :filter="selectInteractionFilter"
-    >
-      <ol-style>
-        <ol-style-icon :src="marker" :scale="0.05"></ol-style-icon>
-      </ol-style>
-    </ol-interaction-select>
-
-    <slot></slot>
-  </ol-map>
+  <DestinationViewDialog @close="clearSelection" :destinationIds="selectedDestinationIds" />
+  <div id="map"></div>
 </template>
 
 <script lang="ts" setup>
-import { transform } from 'ol/proj.js'
-import { useConfiguration } from '@store/Configuration'
-import { inject, ref, watch } from 'vue'
-import marker from '@/assets/marker.png'
-import { useDestinationViewDialog } from '@components/Destination/DestinationViewDialog/DestinationView.Dialog'
-import type Map from 'ol/Map'
-import { useMultipleDestinationViewDialog } from '@components/Destination/MultipleDestinationView/MultipleDestinationView.Dialog'
+import 'ol/ol.css'
+import { useConfiguration } from '@/stores/Configuration'
+import { useDestinationStore } from '@/stores/Destinations'
+import useOpenLayers from '@/composables/useOpenLayers'
+import { ref, watch } from 'vue'
+import DestinationViewDialog from '@components/Destination/DestinationView/DestinationViewDialog.vue'
 
-const destinationViewDialog = useDestinationViewDialog()
-const multipleDestinationViewDialog = useMultipleDestinationViewDialog()
+export interface MapProps {
+  center?: [number, number]
+  zoom?: number
+}
 
-const mapRef = ref(null)
+const props = withDefaults(defineProps<MapProps>(), {
+  // @ts-ignore
+  center: [0, 0],
+  zoom: 1
+})
+
+const selectedDestinationIds = ref<string[]>([])
 
 const configuration = useConfiguration()
 await configuration.load()
-defineProps({
-  center: {
-    type: Array<Number>,
-    default: () => [20, 0]
-  },
-  zoom: {
-    type: Number,
-    default: 2
-  },
-  rotation: {
-    type: Number,
-    default: 0
-  },
-  projection: {
-    type: String,
-    default: 'EPSG:3857'
-  }
+
+const destinationStore = useDestinationStore()
+
+const { loadDestinations, onFeatureEvent, clearFeatureSelection } = useOpenLayers({
+  target: 'map',
+  center: props.center,
+  zoom: props.zoom,
+  projection: configuration.projection,
+  tileServerUrl: configuration.tileServer
 })
 
-const selectConditions = inject('ol-selectconditions')
-const selectCondition = selectConditions.click
-
-const featureSelected = async (event: any) => {
-  if (event.selected[0] === undefined) {
-    destinationViewDialog.close()
-    return
-  }
-
-  if (event.selected[0].values_.features.length === 0) {
-    destinationViewDialog.close()
-  } else if (event.selected[0].values_.features.length == 1) {
-    await destinationViewDialog.open(event.selected[0].values_.features[0].values_.id)
-  } else {
-    await multipleDestinationViewDialog.open(
-      event.selected[0].values_.features.map((feature: any) => feature.values_.id)
-    )
-  }
+function clearSelection() {
+  selectedDestinationIds.value = []
+  clearFeatureSelection()
 }
 
-multipleDestinationViewDialog.onClose(() => {
-  const map = mapRef.value?.map as Map | undefined
-  if (map === undefined) return
-  map.getInteractions().forEach((interaction) => {
-    if (interaction.getFeatures !== undefined) interaction.getFeatures().clear()
-  })
+function onDestinationSelected(destinationIds: string[]) {
+  if (destinationIds.length === 0) selectedDestinationIds.value = []
+  if (destinationIds.length > 0) selectedDestinationIds.value = destinationIds
+}
+
+onFeatureEvent({
+  selected: onDestinationSelected
 })
+
 watch(
-  () => destinationViewDialog.isOpen,
-  (isOpen) => {
-    if (!isOpen) {
-      const map = mapRef.value?.map as Map | undefined
-      if (map === undefined) return
-      map.getInteractions().forEach((interaction) => {
-        if (interaction.getFeatures !== undefined) interaction.getFeatures().clear()
-      })
-    }
-  }
+  () => destinationStore.filteredDestinations,
+  (value) => loadDestinations({ animate: true, destinations: value, enableClustering: false }),
+  { immediate: true }
 )
-
-const selectInteractionFilter = (feature: any) => {
-  return !destinationViewDialog.isOpen && feature.values_.features.length > 0
-}
 </script>
 
 <style scoped>
-.overlay-content {
-  background: #efefef;
-  box-shadow: 0 5px 10px rgb(2 2 2 / 20%);
-  padding: 10px 20px;
-  font-size: 16px;
-  color: black;
+#map {
+  width: 100%;
+  height: 800px;
 }
 </style>

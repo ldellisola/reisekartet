@@ -1,6 +1,4 @@
 using FastEndpoints;
-using Namotion.Reflection;
-using Reisekartet.Api.Features.Destinations.GetAllDestinations;
 using Reisekartet.Persistence.Models;
 
 namespace Reisekartet.Api.Features.Destinations.Get;

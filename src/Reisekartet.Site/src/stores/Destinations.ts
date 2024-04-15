@@ -15,7 +15,9 @@ export const useDestinationStore = defineStore('Destinations', () => {
 
   const destinationTypes = ref<string[]>([])
 
-  const filteredDestinations = computed(() => destinations.value)
+  const filteredDestinations = computed(() => {
+    return destinations.value
+  })
   const byType = computed(() => groupBy(destinations.value, (d) => d.tags[0]))
 
   async function refresh() {
@@ -75,7 +77,8 @@ export const useDestinationStore = defineStore('Destinations', () => {
     return null
   }
 
-  async function update(id: string,
+  async function update(
+    id: string,
     name: string,
     tags: string[],
     website: string | undefined,

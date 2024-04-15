@@ -5,29 +5,42 @@ import Map from '@components/Mapping/Map.vue'
 import type { Destination } from '@/api/Models/Destination'
 import Tag from '@components/Tag.vue'
 import { useDestinationStore } from '@store/Destinations'
-import { useDestinationViewDialog } from '@components/Destination/DestinationViewDialog/DestinationView.Dialog'
-import { useMultipleDestinationViewDialog } from '@components/Destination/MultipleDestinationView/MultipleDestinationView.Dialog'
+import useOpenLayers from '@/composables/useOpenLayers'
+import { useConfiguration } from '@/stores/Configuration'
 
-const destinations = useDestinationStore()
-const destinationViewDialog = useDestinationViewDialog()
-const multipleDestinationViewDialog = useMultipleDestinationViewDialog()
-
-defineProps<{
+const props = defineProps<{
   destination: Destination
 }>()
 
+const emit = defineEmits<{
+  close: []
+}>()
+
+const configuration = useConfiguration()
+const destinations = useDestinationStore()
+console.log(props.destination)
+console.log([props.destination.longitude, props.destination.latitude])
+const { loadDestinations } = useOpenLayers({
+  target: 'destination-map',
+  projection: configuration.projection,
+  center: [props.destination.longitude, props.destination.latitude],
+  zoom: 15,
+  tileServerUrl: configuration.tileServer
+})
+
 async function deleteDestination(id: string) {
   await destinations.remove(id)
-  destinationViewDialog.close()
-  multipleDestinationViewDialog.close()
+  emit('close')
 }
+
+loadDestinations({ destinations: [props.destination], enableClustering: false })
 </script>
 
 <template>
   <v-card class="mx-auto w-100">
-    <v-card-title>{{ destination?.name }}</v-card-title>
+    <v-card-title>{{ destination.name }}</v-card-title>
     <v-card-subtitle>
-      <Tag v-for="tag in destination?.tags" :name="tag" />
+      <Tag v-for="tag in destination.tags" :name="tag" />
     </v-card-subtitle>
     <v-card-text>
       <v-row>
@@ -35,25 +48,18 @@ async function deleteDestination(id: string) {
           <v-card class="elevation-2 fill-height">
             <v-card-title>Information</v-card-title>
             <v-card-text>
-              <p><b>Latitude</b>: {{ destination?.latitude }}</p>
-              <p><b>Longitude</b>: {{ destination?.longitude }}</p>
-              <p v-if="!isNullOrWhitespace(destination?.website)">
+              <p><b>Latitude</b>: {{ destination.latitude }}</p>
+              <p><b>Longitude</b>: {{ destination.longitude }}</p>
+              <p v-if="!isNullOrWhitespace(destination.website)">
                 <b>Website</b>:
-                <a :href="destination?.website!" target="_blank">{{ destination?.website }} </a>
+                <a :href="destination.website!" target="_blank">{{ destination.website }}</a>
               </p>
             </v-card-text>
           </v-card>
         </v-col>
       </v-row>
       <v-row>
-        <Map
-          :center="[destination?.longitude ?? 0, destination?.latitude ?? 0]"
-          :zoom="15"
-          :rotation="0"
-          style="width: 100%; height: 400px"
-        >
-          <SingleDestinationLayer :destination="destination!" />
-        </Map>
+        <div id="destination-map" style="width: 100%; height: 400px"></div>
       </v-row>
     </v-card-text>
     <v-card-actions>
