@@ -33,7 +33,7 @@ async function deleteDestination(id: string) {
   emit('close')
 }
 
-loadDestinations([props.destination], false)
+loadDestinations({ destinations: [props.destination], enableClustering: false })
 </script>
 
 <template>

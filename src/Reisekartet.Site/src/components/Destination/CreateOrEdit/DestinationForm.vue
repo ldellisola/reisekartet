@@ -2,12 +2,11 @@
 import Tag from '@components/Tag.vue'
 import { useDestinationStore } from '@store/Destinations'
 import { useDestinationForm } from '@components/Destination/CreateOrEdit/Destination.form'
-import SingleDestinationLayer from '@components/Mapping/SingleDestinationLayer.vue'
-import { toArray } from '@/lib/ArrayFunctions'
-import { transform } from 'ol/proj'
 import { useConfiguration } from '@store/Configuration'
 import { useRouter } from 'vue-router'
 import type { SubmitEventPromise } from 'vuetify'
+import useOpenLayers from '@/composables/useOpenLayers'
+import { watch } from 'vue'
 const router = useRouter()
 const form = useDestinationForm()
 const destinationStore = useDestinationStore()
@@ -28,6 +27,14 @@ const variant = 'filled' as
   | 'solo-filled'
   | undefined
 
+const { loadLocation } = useOpenLayers({
+  target: 'create-map',
+  projection: configuration.projection,
+  tileServerUrl: configuration.tileServer,
+  zoom: 1,
+  center: [0, 0]
+})
+
 await form.load(props.id as string)
 
 async function parseLocation(event: boolean | string) {
@@ -46,6 +53,16 @@ async function save(event: SubmitEventPromise) {
 function cancel() {
   router.go(-1)
 }
+
+watch(
+  () => form.location,
+  async (location) => {
+    if (location !== null) {
+      loadLocation({ location, center: true, zoom: 15 })
+    }
+  },
+  { immediate: true }
+)
 
 const rules = {
   required: (value: string) => !!value || 'Required.',
@@ -140,25 +157,7 @@ const rules = {
       </v-row>
       <v-row>
         <v-col>
-          <ol-map
-            :loadTilesWhileAnimating="true"
-            :loadTilesWhileInteracting="true"
-            height="100%"
-            style="height: 400px"
-          >
-            <ol-view
-              :center="
-                transform(toArray(form.location) ?? [0, 0], 'EPSG:4326', configuration.projection)
-              "
-              :zoom="form.location === null ? 3 : 15"
-              :projection="configuration.projection"
-            />
-            <ol-tile-layer>
-              <ol-source-osm :url="configuration.tileServer" />
-            </ol-tile-layer>
-
-            <SingleDestinationLayer v-if="form.location !== null" :destination="form.location" />
-          </ol-map>
+          <div id="create-map" style="height: 400px"></div>
         </v-col>
       </v-row>
     </v-container>

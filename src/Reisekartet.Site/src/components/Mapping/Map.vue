@@ -53,7 +53,7 @@ onFeatureEvent({
 
 watch(
   () => destinationStore.filteredDestinations,
-  (value) => loadDestinations(value, true),
+  (value) => loadDestinations({ animate: true, destinations: value, enableClustering: false }),
   { immediate: true }
 )
 </script>
@@ -64,4 +64,3 @@ watch(
   height: 800px;
 }
 </style>
-../Destination/DestinationView/MultipleDestinationViewDialog.vue

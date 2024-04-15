@@ -1,4 +1,4 @@
-import type { Destination } from '@/api/Models/Destination'
+import type { Destination, PlaceLocation } from '@/api/Models/Destination'
 import { groupBy } from '@/lib/ArrayFunctions'
 import { getColor } from '@/lib/StringFunctions'
 import { Feature, Map, View } from 'ol'
@@ -8,7 +8,7 @@ import Select from 'ol/interaction/Select'
 import type BaseLayer from 'ol/layer/Base'
 import TileLayer from 'ol/layer/Tile'
 import VectorLayer from 'ol/layer/Vector'
-import { transform } from 'ol/proj'
+import { transform, transformExtent } from 'ol/proj'
 import { Cluster, XYZ } from 'ol/source'
 import VectorSource from 'ol/source/Vector'
 import { Fill, Icon, Stroke, Style, Text } from 'ol/style'
@@ -28,8 +28,20 @@ export interface OnFeatureProps {
   unselected?: (destinationId: string[]) => void
 }
 
+export interface LoadDestinationsProps {
+  destinations: Destination[]
+  enableClustering: boolean
+  animate?: boolean
+}
+
+export interface LoadLocationProps {
+  location: PlaceLocation
+  center: boolean
+  zoom?: number
+  animate?: boolean
+}
+
 export default function useOpenLayers(options: OpenLayersOptions) {
-  console.log('center', options.center)
   const map = new Map({
     layers: [
       new TileLayer({
@@ -40,11 +52,10 @@ export default function useOpenLayers(options: OpenLayersOptions) {
       })
     ],
     view: new View({
-      center: transform(options.center, 'EPSG:4326', options.projection),
+      center: coords(options.center),
       zoom: options.zoom
     })
   })
-  console.log('map', map)
 
   function createDestinationLayer(destinations: Destination[]): BaseLayer {
     const styleCache: { [tag: string]: Style } = {}
@@ -55,9 +66,7 @@ export default function useOpenLayers(options: OpenLayersOptions) {
             primaryTag: d.tags[0],
             name: d.name,
             id: d.id,
-            geometry: new Point(
-              transform([d.longitude, d.latitude], 'EPSG:4326', options.projection)
-            )
+            geometry: new Point(coords(d))
           })
         })
       }),
@@ -96,9 +105,7 @@ export default function useOpenLayers(options: OpenLayersOptions) {
                 primaryTag: d.tags[0],
                 name: d.name,
                 id: d.id,
-                geometry: new Point(
-                  transform([d.longitude, d.latitude], 'EPSG:4326', options.projection)
-                )
+                geometry: new Point(coords(d))
               })
             })
           })
@@ -132,12 +139,86 @@ export default function useOpenLayers(options: OpenLayersOptions) {
     })
   }
 
-  function loadDestinations(destinations: Destination[], enableClustering: boolean) {
+  function coords(place: PlaceLocation | [number, number]) {
+    const coords = Array.isArray(place) ? place : [place.longitude, place.latitude]
+    return transform(coords, 'EPSG:4326', options.projection)
+  }
+
+  function flyTo(location: PlaceLocation, endZoom: number) {
+    const view = map.getView()
+    const duration = 3000
+
+    view.animate({
+      center: coords(location),
+      duration: duration,
+      zoom: endZoom
+    })
+  }
+
+  /*
+   * This function is used to load a location on the map
+   * It creates a point feature at the location and sets the map center to the location if center is true
+   * @param location - the location to load
+   * @param center - whether to center the map on the location
+   *
+   */
+  function loadLocation({ location, center, zoom, animate }: LoadLocationProps) {
+    const point = new Feature({
+      geometry: new Point(coords(location))
+    })
+    const source = new VectorSource({
+      features: [point]
+    })
+    const layer = new VectorLayer({
+      source: source,
+      style: new Style({
+        image: new Icon({
+          anchor: [0.5, 1],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'fraction',
+          src: '/icons8-place-marker-50(1).png',
+          color: '#FF0000',
+          scale: 0.6
+        })
+      })
+    })
+    map.setLayers([map.getLayers().item(0), layer])
+
+    if (animate) {
+      flyTo(location, zoom ?? map.getView().getZoom()!)
+      return
+    }
+    if (zoom) map.getView().setZoom(zoom)
+    if (center) map.getView().setCenter(coords(location))
+  }
+
+  function loadDestinations({ destinations, enableClustering, animate }: LoadDestinationsProps) {
     const destinationLayers = enableClustering
       ? createClusterLayer(destinations)
       : [createDestinationLayer(destinations)]
 
     map.setLayers([map.getLayers().item(0), ...destinationLayers])
+    if (animate) {
+      const extent = destinations.reduce(
+        (acc, d) => {
+          const coords = d
+          return [
+            Math.min(acc[0], coords.longitude),
+            Math.min(acc[1], coords.latitude),
+            Math.max(acc[2], coords.longitude),
+            Math.max(acc[3], coords.latitude)
+          ]
+        },
+        [180, 90, -180, -90]
+      )
+
+      map.once('postrender', () => {
+        map.getView().fit(transformExtent(extent, 'EPSG:4326', options.projection), {
+          duration: 2000,
+          padding: [100, 100, 100, 100]
+        })
+      })
+    }
   }
 
   /*
@@ -194,5 +275,5 @@ export default function useOpenLayers(options: OpenLayersOptions) {
 
   onMounted(() => map.setTarget(options.target))
 
-  return { loadDestinations, onFeatureEvent, clearFeatureSelection }
+  return { loadLocation, loadDestinations, onFeatureEvent, clearFeatureSelection }
 }

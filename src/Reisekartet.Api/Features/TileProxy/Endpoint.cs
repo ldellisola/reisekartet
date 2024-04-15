@@ -32,9 +32,12 @@ internal sealed class Endpoint(IHttpClientFactory clientFactory, IDistributedCac
         var existingTile = await cache.GetAsync(path, ct);
         if (existingTile is not null)
         {
+            Logger.LogDebug("Cache hit for {Path}", path);
             await SendBytesAsync(existingTile, contentType: "image/png", cancellation: ct);
             return;
         }
+
+        Logger.LogDebug("Cache miss for {Path}", path);
 
         var client = clientFactory.CreateClient("tileproxy");
         var result = await client.GetAsync(path, ct);
