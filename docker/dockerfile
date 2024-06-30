@@ -1,3 +1,6 @@
+ARG COMMIT_HASH=unknown
+ARG VERSION=unknown
+
 # Build dotnet backend
 FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build-backend
 WORKDIR /src
@@ -17,10 +20,10 @@ COPY ./src/Reisekartet.Site/ .
 
 RUN bun install
 RUN bunx --bun vite build
+RUN echo "{\"commit\": \"${COMMIT_HASH}\", \"version\": \"${VERSION}\"}" > out/version.json
 
 # Runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
-
 ENV ASPNETCORE_URLS=http://+:80
 ENV ASPNETCORE_ENVIRONMENT=Production
 

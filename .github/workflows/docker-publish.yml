@@ -23,6 +23,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Get Git Commit and Tag
+        id: git_info
+        run: |
+          echo "COMMIT_HASH=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          TAG=$(git describe --tags --abbrev=0)
+          if [ -z "$TAG" ]; then
+            TAG="0.0.0"
+          fi
+          echo "VERSION=$TAG" >> $GITHUB_ENV
+
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@main
@@ -59,6 +69,9 @@ jobs:
           context: .
           file: docker/dockerfile
           push: ${{ github.event_name != 'pull_request' }}
+          build-args: |
+            COMMIT_HASH:${{ env.COMMIT_HASH }}
+            VERSION:${{ env.VERSION }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
