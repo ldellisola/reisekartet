@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  redis:
+    image: redis
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express
+    restart: unless-stopped
+    ports:
+      - 9081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/

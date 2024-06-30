@@ -1,0 +1,34 @@
+# Build dotnet backend
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build-backend
+WORKDIR /src
+COPY ./src/Reisekartet.sln .
+COPY ./src/Reisekartet.Api ./Reisekartet.Api/
+COPY ./src/Reisekartet.Persistence/ ./Reisekartet.Persistence/
+COPY ./src/Reisekartet.Kml/ ./Reisekartet.Kml/
+
+RUN dotnet restore Reisekartet.sln
+RUN dotnet build -c Release --no-restore
+RUN dotnet publish ./Reisekartet.Api/Reisekartet.Api.csproj -o out -c Release --no-restore --no-build
+
+# Build vue frontend with bun
+FROM oven/bun:1-alpine as build-frontend
+WORKDIR /src
+COPY ./src/Reisekartet.Site/ .
+
+RUN bun install
+RUN bunx --bun vite build
+
+# Runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
+
+ENV ASPNETCORE_URLS=http://+:80
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+WORKDIR /app
+COPY --from=build-backend /src/out ./
+COPY --from=build-frontend /src/dist ./wwwroot
+ENTRYPOINT ["dotnet", "Reisekartet.Api.dll"]
+
+LABEL org.opencontainers.image.source=https://github.com/ldellisola/reisekartet
+LABEL org.opencontainers.image.description="Reisekartet (The Travel Map) is an open source travel destination manager"
+LABEL org.opencontainers.image.licenses=MIT

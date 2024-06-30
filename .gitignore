@@ -3,6 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+bun.lockb
+
 .idea
 
 # User-specific files
@@ -477,3 +479,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+src/Reisekartet.Api/appsettings.Development.json
