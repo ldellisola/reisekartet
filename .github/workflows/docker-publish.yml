@@ -68,8 +68,8 @@ jobs:
           file: docker/dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
-            COMMIT_HASH:${{ env.COMMIT_HASH }}
-            VERSION:${{ env.VERSION }}
+            COMMIT_HASH=${{ env.COMMIT_HASH }}
+            VERSION=${{ env.VERSION }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
