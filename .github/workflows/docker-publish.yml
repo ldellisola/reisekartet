@@ -28,10 +28,7 @@ jobs:
         id: git_info
         run: |
           echo "COMMIT_HASH=$(git rev-parse HEAD)" >> $GITHUB_ENV
-          TAG=$(git describe --tags --abbrev=0)
-          if [ -z "$TAG" ]; then
-            TAG="0.0.0"
-          fi
+          TAG=$(git describe --tags --abbrev=0 || echo "0.0.0")
           echo "VERSION=$TAG" >> $GITHUB_ENV
 
       - name: Install cosign
