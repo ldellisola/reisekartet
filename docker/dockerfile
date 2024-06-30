@@ -20,7 +20,7 @@ COPY ./src/Reisekartet.Site/ .
 
 RUN bun install
 RUN bunx --bun vite build
-RUN echo "{\"commit\": \"${COMMIT_HASH}\", \"version\": \"${VERSION}\"}" > out/version.json
+RUN echo "{\"commit\": \"${COMMIT_HASH}\", \"version\": \"${VERSION}\"}" > dist/version.json
 
 # Runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
