@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import type { Destination } from '@/api/Models/Destination'
 import DestinationView from '@components/Destination/DestinationView/DestinationView.vue'
 import Tag from '@components/Tag.vue'
@@ -30,6 +30,17 @@ function close() {
   emit('close')
   loading.value = false
 }
+
+function closeOnKeyboardInut(e: KeyboardEvent) {
+  if (e.key === 'Escape') close()
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', closeOnKeyboardInut)
+})
+onUnmounted(() => {
+  window.removeEventListener('keydown', closeOnKeyboardInut)
+})
 
 watch(
   () => props.destinationIds,
