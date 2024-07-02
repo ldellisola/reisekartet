@@ -48,8 +48,6 @@ import DestinationList from '@components/DestinationList.vue'
 import DestinationLayer from '@components/Mapping/MultipleDestinationsLayer.vue'
 import { useDestinationStore } from '@store/Destinations'
 import ImportDestinationDialog from '@components/ImportDestinations/ImportDestinationDialog.vue'
-// import DestinationViewDialog from '@components/Destination/DestinationViewDialog/DestinationViewDialog.vue'
-// import MultipleDestinationViewDialog from '@components/Destination/MultipleDestinationView/MultipleDestinationViewDialog.vue'
 import FilterBox from '@components/Filters/FilterBox.vue'
 
 const destinations = useDestinationStore()

@@ -53,7 +53,7 @@ onFeatureEvent({
 
 watch(
   () => destinationStore.filteredDestinations,
-  (value) => loadDestinations({ animate: true, destinations: value, enableClustering: false }),
+  (value) => loadDestinations({ animate: true, destinations: value, enableClustering: true }),
   { immediate: true }
 )
 </script>

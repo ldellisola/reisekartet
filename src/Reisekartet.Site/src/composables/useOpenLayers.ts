@@ -199,7 +199,7 @@ export default function useOpenLayers(options: OpenLayersOptions) {
 
     map.setLayers([map.getLayers().item(0), ...destinationLayers])
     if (animate) {
-      const extent = destinations.reduce(
+      let extent = destinations.reduce(
         (acc, d) => {
           const coords = d
           return [
@@ -211,6 +211,10 @@ export default function useOpenLayers(options: OpenLayersOptions) {
         },
         [180, 90, -180, -90]
       )
+
+      if (destinations.length === 1) {
+        extent = [extent[0] - 0.007, extent[1] - 0.007, extent[2] + 0.007, extent[3] + 0.007]
+      }
 
       map.once('postrender', () => {
         map.getView().fit(transformExtent(extent, 'EPSG:4326', options.projection), {
