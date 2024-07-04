@@ -1,6 +1,4 @@
 <template>
-  <!-- <DestinationViewDialog /> -->
-  <!-- <MultipleDestinationViewDialog /> -->
   <v-container>
     <v-row>
       <v-col cols="12" sm="4" md="3" lg="2" xl="2" class="d-flex align-center py-1">
