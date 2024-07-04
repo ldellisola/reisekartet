@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import SingleDestinationLayer from '@components/Mapping/SingleDestinationLayer.vue'
 import { isNullOrWhitespace } from '@/lib/StringFunctions'
-import Map from '@components/Mapping/Map.vue'
 import type { Destination } from '@/api/Models/Destination'
 import Tag from '@components/Tag.vue'
 import { useDestinationStore } from '@store/Destinations'
@@ -18,8 +16,6 @@ const emit = defineEmits<{
 
 const configuration = useConfiguration()
 const destinations = useDestinationStore()
-console.log(props.destination)
-console.log([props.destination.longitude, props.destination.latitude])
 const { loadDestinations } = useOpenLayers({
   target: 'destination-map',
   projection: configuration.projection,

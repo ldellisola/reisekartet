@@ -1,5 +1,5 @@
 <template>
-  <DestinationViewDialog @close="clearSelection" :destinationIds="selectedDestinationIds" />
+  <DestinationViewDialog @close="clearSelection" :destinationId="selectedDestinationId" />
   <div id="map"></div>
 </template>
 
@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<MapProps>(), {
   zoom: 1
 })
 
-const selectedDestinationIds = ref<string[]>([])
+const selectedDestinationId = ref<string | undefined>(undefined)
 
 const configuration = useConfiguration()
 await configuration.load()
@@ -38,13 +38,12 @@ const { loadDestinations, onFeatureEvent, clearFeatureSelection } = useOpenLayer
 })
 
 function clearSelection() {
-  selectedDestinationIds.value = []
+  selectedDestinationId.value = undefined
   clearFeatureSelection()
 }
 
 function onDestinationSelected(destinationIds: string[]) {
-  if (destinationIds.length === 0) selectedDestinationIds.value = []
-  if (destinationIds.length > 0) selectedDestinationIds.value = destinationIds
+  if (destinationIds.length === 1) selectedDestinationId.value = destinationIds[0]
 }
 
 onFeatureEvent({

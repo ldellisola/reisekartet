@@ -216,7 +216,7 @@ export default function useOpenLayers(options: OpenLayersOptions) {
         extent = [extent[0] - 0.007, extent[1] - 0.007, extent[2] + 0.007, extent[3] + 0.007]
       }
 
-      map.once('postrender', () => {
+      map.once('rendercomplete', () => {
         map.getView().fit(transformExtent(extent, 'EPSG:4326', options.projection), {
           duration: 2000,
           padding: [100, 100, 100, 100]
@@ -252,6 +252,34 @@ export default function useOpenLayers(options: OpenLayersOptions) {
 
       if (event.selected.length > 0 && selected !== undefined) {
         if (isClustered) {
+          const pointCoordinates = event.selected
+            .map((f: Feature) =>
+              f
+                .get('features')
+                .map((f: Feature) => (f.getGeometry() as Point).getCoordinates())
+                .map((c: number[]) => transform(c, options.projection, 'EPSG:4326'))
+            )
+            .flat()
+
+          if (pointCoordinates.length > 1) {
+            const extent = pointCoordinates.reduce(
+              (acc, coord) => {
+                return [
+                  Math.min(acc[0], coord[0]),
+                  Math.min(acc[1], coord[1]),
+                  Math.max(acc[2], coord[0]),
+                  Math.max(acc[3], coord[1])
+                ]
+              },
+              [180, 90, -180, -90]
+            )
+
+            map.getView().fit(transformExtent(extent, 'EPSG:4326', options.projection), {
+              duration: 2000,
+              padding: [100, 100, 100, 100]
+            })
+          }
+
           selected(
             event.selected
               .map((f: Feature) => f.get('features').map((f: Feature) => f.get('id')))
