@@ -8,7 +8,7 @@ import Select from 'ol/interaction/Select'
 import type BaseLayer from 'ol/layer/Base'
 import TileLayer from 'ol/layer/Tile'
 import VectorLayer from 'ol/layer/Vector'
-import { transform, transformExtent } from 'ol/proj'
+import { useGeographic } from 'ol/proj'
 import { Cluster, XYZ } from 'ol/source'
 import VectorSource from 'ol/source/Vector'
 import { Fill, Icon, Stroke, Style, Text } from 'ol/style'
@@ -40,6 +40,8 @@ export interface LoadLocationProps {
   zoom?: number
   animate?: boolean
 }
+
+useGeographic()
 
 export default function useOpenLayers(options: OpenLayersOptions) {
   const map = new Map({
@@ -139,9 +141,8 @@ export default function useOpenLayers(options: OpenLayersOptions) {
     })
   }
 
-  function coords(place: PlaceLocation | [number, number]) {
-    const coords = Array.isArray(place) ? place : [place.longitude, place.latitude]
-    return transform(coords, 'EPSG:4326', options.projection)
+  function coords(place: PlaceLocation | [number, number] | number[]) {
+    return Array.isArray(place) ? [place[0], place[1]] : [place.longitude, place.latitude]
   }
 
   function flyTo(location: PlaceLocation, endZoom: number) {
@@ -217,7 +218,7 @@ export default function useOpenLayers(options: OpenLayersOptions) {
       }
 
       map.once('rendercomplete', () => {
-        map.getView().fit(transformExtent(extent, 'EPSG:4326', options.projection), {
+        map.getView().fit(extent, {
           duration: 2000,
           padding: [100, 100, 100, 100]
         })
@@ -254,10 +255,7 @@ export default function useOpenLayers(options: OpenLayersOptions) {
         if (isClustered) {
           const pointCoordinates = event.selected
             .map((f: Feature) =>
-              f
-                .get('features')
-                .map((f: Feature) => (f.getGeometry() as Point).getCoordinates())
-                .map((c: number[]) => transform(c, options.projection, 'EPSG:4326'))
+              f.get('features').map((f: Feature) => (f.getGeometry() as Point).getCoordinates())
             )
             .flat()
 
@@ -274,7 +272,7 @@ export default function useOpenLayers(options: OpenLayersOptions) {
               [180, 90, -180, -90]
             )
 
-            map.getView().fit(transformExtent(extent, 'EPSG:4326', options.projection), {
+            map.getView().fit(extent, {
               duration: 2000,
               padding: [100, 100, 100, 100]
             })
