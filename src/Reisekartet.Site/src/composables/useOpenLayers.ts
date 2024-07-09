@@ -99,6 +99,7 @@ export default function useOpenLayers(options: OpenLayersOptions) {
     return [...groupBy(destinations, (t) => t.tags[0])].map(([tag, destinations]) => {
       const styleCache: { [id: number]: Style } = {}
       return new VectorLayer({
+        cluster: true,
         source: new Cluster({
           distance: 40,
           source: new VectorSource({
@@ -237,7 +238,8 @@ export default function useOpenLayers(options: OpenLayersOptions) {
   function onFeatureEvent({ selected, unselected }: OnFeatureProps) {
     const select = new Select({ condition: click })
     select.on('select', (event) => {
-      const isClustered = map.getLayers().getArray().length > 2
+      const isClustered =
+        event.selected.length > 0 && (select.getLayer(event.selected[0]).get('cluster') ?? false)
 
       if (event.deselected.length > 0 && unselected !== undefined) {
         if (isClustered) {
