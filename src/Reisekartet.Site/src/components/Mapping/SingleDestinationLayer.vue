@@ -2,7 +2,7 @@
   <ol-vector-layer>
     <ol-source-vector>
       <ol-feature>
-        <ol-geom-point :coordinates="transformCoordinates(destination)" />
+        <ol-geom-point :coordinates="toArray(destination)" />
       </ol-feature>
     </ol-source-vector>
 
@@ -23,18 +23,9 @@
 
 <script lang="ts" setup>
 import type { PlaceLocation } from '@/api/Models/Destination'
-import { transform } from 'ol/proj'
 import { toArray } from '@/lib/ArrayFunctions'
-import { useConfiguration } from '@store/Configuration'
 
-const props = defineProps<{
+defineProps<{
   destination: PlaceLocation
 }>()
-
-const configuration = useConfiguration()
-await configuration.load()
-
-const transformCoordinates = (destination: PlaceLocation) => {
-  return transform(toArray(destination)!, 'EPSG:4326', configuration.projection)
-}
 </script>

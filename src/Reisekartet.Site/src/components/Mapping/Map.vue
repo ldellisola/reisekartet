@@ -5,7 +5,6 @@
 
 <script lang="ts" setup>
 import 'ol/ol.css'
-import { useConfiguration } from '@/stores/Configuration'
 import { useDestinationStore } from '@/stores/Destinations'
 import useOpenLayers from '@/composables/useOpenLayers'
 import { ref, watch } from 'vue'
@@ -24,17 +23,12 @@ const props = withDefaults(defineProps<MapProps>(), {
 
 const selectedDestinationId = ref<string | undefined>(undefined)
 
-const configuration = useConfiguration()
-await configuration.load()
-
 const destinationStore = useDestinationStore()
 
 const { loadDestinations, onFeatureEvent, clearFeatureSelection } = useOpenLayers({
   target: 'map',
   center: props.center,
-  zoom: props.zoom,
-  projection: configuration.projection,
-  tileServerUrl: configuration.tileServer
+  zoom: props.zoom
 })
 
 function clearSelection() {

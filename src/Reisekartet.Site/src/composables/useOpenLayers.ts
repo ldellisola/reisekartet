@@ -19,8 +19,6 @@ export interface OpenLayersOptions {
   target: string
   center: [number, number]
   zoom: number
-  tileServerUrl: string
-  projection: string
 }
 
 export interface OnFeatureProps {
@@ -48,8 +46,8 @@ export default function useOpenLayers(options: OpenLayersOptions) {
     layers: [
       new TileLayer({
         source: new XYZ({
-          url: options.tileServerUrl,
-          projection: options.projection
+          url: '/api/tiles/{z}/{x}/{y}.png',
+          projection: 'EPSG:3857'
         })
       })
     ],

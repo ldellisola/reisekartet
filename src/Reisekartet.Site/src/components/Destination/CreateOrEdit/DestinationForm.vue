@@ -2,7 +2,6 @@
 import Tag from '@components/Tag.vue'
 import { useDestinationStore } from '@store/Destinations'
 import { useDestinationForm } from '@components/Destination/CreateOrEdit/Destination.form'
-import { useConfiguration } from '@store/Configuration'
 import { useRouter } from 'vue-router'
 import type { SubmitEventPromise } from 'vuetify'
 import useOpenLayers from '@/composables/useOpenLayers'
@@ -11,8 +10,6 @@ const router = useRouter()
 const form = useDestinationForm()
 const destinationStore = useDestinationStore()
 const tags = await destinationStore.refreshTags()
-const configuration = useConfiguration()
-await configuration.load()
 
 // Define props
 const props = defineProps(['id'])
@@ -29,8 +26,6 @@ const variant = 'filled' as
 
 const { loadLocation } = useOpenLayers({
   target: 'create-map',
-  projection: configuration.projection,
-  tileServerUrl: configuration.tileServer,
   zoom: 1,
   center: [0, 0]
 })

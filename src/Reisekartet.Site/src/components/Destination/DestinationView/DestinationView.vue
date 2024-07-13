@@ -4,7 +4,6 @@ import type { Destination } from '@/api/Models/Destination'
 import Tag from '@components/Tag.vue'
 import { useDestinationStore } from '@store/Destinations'
 import useOpenLayers from '@/composables/useOpenLayers'
-import { useConfiguration } from '@/stores/Configuration'
 
 const props = defineProps<{
   destination: Destination
@@ -14,14 +13,11 @@ const emit = defineEmits<{
   close: []
 }>()
 
-const configuration = useConfiguration()
 const destinations = useDestinationStore()
 const { loadDestinations } = useOpenLayers({
   target: 'destination-map',
-  projection: configuration.projection,
   center: [props.destination.longitude, props.destination.latitude],
-  zoom: 15,
-  tileServerUrl: configuration.tileServer
+  zoom: 15
 })
 
 async function deleteDestination(id: string) {

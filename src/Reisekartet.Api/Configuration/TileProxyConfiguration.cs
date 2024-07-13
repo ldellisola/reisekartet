@@ -9,7 +9,7 @@ public static class TileProxyConfiguration
         var options = new MapsConfiguration();
         new MapsConfigurationSetup(configuration).Configure(options);
 
-        if (options is { UseCache: true, RedisConnectionString: not null })
+        if (options is { UseCache: true })
         {
             services.AddStackExchangeRedisCache(o => o.Configuration = options.RedisConnectionString);
             services.AddHttpClient("tileproxy", (_, client) =>
