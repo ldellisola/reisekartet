@@ -2,6 +2,8 @@ using System.Text;
 using System.Text.Json.Serialization;
 using FastEndpoints;
 using FastEndpoints.Swagger;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Metrics;
 using Reisekartet.Api.Configuration;
 using Reisekartet.Api.JobQueue;
 using Reisekartet.Persistence.Config;
@@ -21,6 +23,15 @@ builder.Services.AddTileProxy(builder.Configuration);
 
 builder.Services.AddReisekartetDbContext();
 
+builder.Services.AddOpenTelemetry()
+    .WithMetrics(t => t
+        .AddMeter("Reisekartet.Api")
+        .AddOtlpExporter(r =>
+        {
+            r.Protocol = OtlpExportProtocol.Grpc;
+            r.Endpoint = new Uri(builder.Configuration.GetConnectionString("Otlp")!);
+        })
+    );
 var app = builder.Build();
 
 app
