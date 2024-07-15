@@ -1,43 +1,43 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12" sm="4" md="3" lg="2" xl="2" class="d-flex align-center py-1">
-        <router-link to="/destination">
-          <v-btn elevation="10" color="primary">New Destination</v-btn>
-        </router-link>
-      </v-col>
+  <div class="flex flex-col mx-4 gap-5">
+    <div class="flex items-center gap-5 flex-wrap">
+      <div class="flex gap-3 flex-wrap">
+        <!-- <button -->
+        <!--   class="bg-primary rounded py-1 px-2 uppercase font-medium text-justify line-" -->
+        <!--   @click="router.push('/destination')" -->
+        <!-- > -->
+        <!--   New Destination -->
+        <!-- </button> -->
 
-      <v-col cols="12" sm="5" md="3" lg="3" xl="2" class="d-flex align-center py-1">
-        <ImportDestinationDialog />
-      </v-col>
+        <v-btn elevation="10" color="primary" @click="router.push('/destination')">
+          New Destination
+        </v-btn>
+        <div class="grow">
+          <ImportDestinationDialog />
+        </div>
+      </div>
 
-      <v-spacer></v-spacer>
-
-      <v-col cols="12" sm="12" md="12" lg="7" xl="8" class="d-flex justify-end py-1">
+      <div class="grow">
         <FilterBox />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-card elevation="10">
-          <Map>
-            <destination-layer
-              v-for="[type, list] in destinations.byType"
-              :destinations="list"
-              :type="type"
-            />
-          </Map>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-card elevation="10">
-          <DestinationList />
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+      </div>
+    </div>
+    <div>
+      <v-card elevation="10">
+        <Map>
+          <destination-layer
+            v-for="[type, list] in destinations.byType"
+            :destinations="list"
+            :type="type"
+          />
+        </Map>
+      </v-card>
+    </div>
+    <div>
+      <v-card elevation="10">
+        <DestinationList />
+      </v-card>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -47,7 +47,9 @@ import DestinationLayer from '@components/Mapping/MultipleDestinationsLayer.vue'
 import { useDestinationStore } from '@store/Destinations'
 import ImportDestinationDialog from '@components/ImportDestinations/ImportDestinationDialog.vue'
 import FilterBox from '@components/Filters/FilterBox.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const destinations = useDestinationStore()
 await destinations.refresh()
 </script>

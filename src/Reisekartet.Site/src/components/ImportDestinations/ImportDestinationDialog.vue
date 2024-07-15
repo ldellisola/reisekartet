@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
 import type { DropEvent } from '@components/ImportDestinations/ImportDestination.dialog'
 import { useImportDestinationDialog } from '@components/ImportDestinations/ImportDestination.dialog'
 
@@ -14,7 +13,9 @@ const handleDrop = (e: DropEvent) => {
 <template>
   <v-dialog v-model="store.isOpen">
     <template v-slot:activator="{ props }">
-      <v-btn elevation="10" color="primary" v-bind="props">Import Destinations</v-btn>
+      <v-btn class="w-full" elevation="10" color="primary" v-bind="props"
+        >Import Destinations</v-btn
+      >
     </template>
     <v-container>
       <v-row justify="center">
