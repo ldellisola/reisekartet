@@ -3,17 +3,21 @@ import { fileURLToPath, URL } from 'url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
-
+import ReactivityTransform from '@vue-macros/reactivity-transform/vite'
 // https://vitejs.dev/config/
 // @ts-ignore
 export default () => {
   return defineConfig({
+    optimizeDeps: {
+      exclude: ['oh-vue-icons/icons']
+    },
     base: '',
     plugins: [
       vue(),
       vuetify({
         autoImport: true
-      })
+      }),
+      ReactivityTransform()
     ],
     resolve: {
       alias: {

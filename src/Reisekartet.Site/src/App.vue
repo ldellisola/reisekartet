@@ -1,6 +1,6 @@
 <template>
   <suspense>
-    <v-app>
+    <v-app class="bg-neutral-mediumGray">
       <Header />
       <v-main>
         <Error />

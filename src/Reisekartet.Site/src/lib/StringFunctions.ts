@@ -21,6 +21,24 @@ export function getColor(str: string): string {
   return color
 }
 
+function hexToRgb(hex: string) {
+  const bigint = parseInt(hex.slice(1), 16)
+  return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255]
+}
+function getLuminance(hexColor: string) {
+  const rgb = hexToRgb(hexColor)
+  const a = rgb.map((v) => {
+    v /= 255
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
+  })
+  return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2]
+}
+
+export function getTextColor(str: string) {
+  const luminance = getLuminance(getColor(str))
+  return luminance > 0.5 ? '#000000' : '#FFFFFF'
+}
+
 export function containsIgnoreCase(
   a: string | null | undefined,
   b: string | null | undefined

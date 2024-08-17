@@ -1,9 +1,9 @@
-export interface PlaceLocation {
+export type PlaceLocation = {
   latitude: number
   longitude: number
 }
 
-export interface Destination extends PlaceLocation {
+export type Destination = PlaceLocation & {
   id: string
   name: string
   city?: string
@@ -11,4 +11,5 @@ export interface Destination extends PlaceLocation {
   tags: string[]
   website?: string
   description?: string
+  show?: boolean
 }

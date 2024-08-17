@@ -4,8 +4,15 @@ import { useDestinationStore } from '@store/Destinations'
 import { useDestinationForm } from '@components/Destination/CreateOrEdit/Destination.form'
 import { useRouter } from 'vue-router'
 import type { SubmitEventPromise } from 'vuetify'
-import useOpenLayers from '@/composables/useOpenLayers'
-import { watch } from 'vue'
+import { onMounted, watch } from 'vue'
+import { Map } from 'ol'
+import { createLayer, createMap, toFeature } from '@/lib/MapFunctions'
+import type { Layer } from 'ol/layer'
+import type { PlaceLocation } from '@/api/Models/Destination'
+import type VectorSource from 'ol/source/Vector'
+import { useGeographic } from 'ol/proj'
+
+useGeographic()
 const router = useRouter()
 const form = useDestinationForm()
 const destinationStore = useDestinationStore()
@@ -23,12 +30,6 @@ const variant = 'filled' as
   | 'solo-inverted'
   | 'solo-filled'
   | undefined
-
-const { loadLocation } = useOpenLayers({
-  target: 'create-map',
-  zoom: 1,
-  center: [0, 0]
-})
 
 await form.load(props.id as string)
 
@@ -53,7 +54,7 @@ watch(
   () => form.location,
   async (location) => {
     if (location !== null) {
-      loadLocation({ location, center: true, zoom: 15 })
+      loadLocation(location)
     }
   },
   { immediate: true }
@@ -63,6 +64,19 @@ const rules = {
   required: (value: string) => !!value || 'Required.',
   locationExists: (value: string) => form.location !== null || 'Location is not valid.',
   multipleItems: (value: string[]) => value.length > 0 || 'At least one tag is required.'
+}
+
+const layer = $shallowRef<Layer>(createLayer())
+const map = $shallowRef<Map>(createMap([layer]))
+onMounted(() => map.setTarget('create-map'))
+
+function loadLocation(location: PlaceLocation) {
+  const source = layer.getSource() as VectorSource
+  source.clear()
+  source.addFeature(toFeature(location))
+  map.getView().setCenter([location.longitude, location.latitude] as [number, number])
+  map.getView().setZoom(15)
+  layer.changed()
 }
 </script>
 

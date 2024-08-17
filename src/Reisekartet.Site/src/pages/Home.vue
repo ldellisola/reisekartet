@@ -1,5 +1,7 @@
 <template>
-  <div class="flex flex-col mx-4 gap-5">
+  <div
+    class="flex flex-col px-6 gap-5 h-screen overflow-y-scroll sm:overflow-y-hidden no-scrollbar"
+  >
     <div class="flex items-center gap-5 flex-wrap">
       <div class="flex gap-3 flex-wrap">
         <!-- <button -->
@@ -21,33 +23,24 @@
         <FilterBox />
       </div>
     </div>
-    <div>
-      <v-card elevation="10">
-        <Map>
-          <destination-layer
-            v-for="[type, list] in destinations.byType"
-            :destinations="list"
-            :type="type"
-          />
-        </Map>
-      </v-card>
-    </div>
-    <div>
-      <v-card elevation="10">
-        <DestinationList />
-      </v-card>
+    <div class="rounded-xl flex flex-col sm:flex-row gap-4 sm:h-[85svh]">
+      <div class="hover:shadow-2xl rounded-xl sm:w-4/5 w-full h-[60svh] sm:h-full">
+        <Map :destinations="destinations.filteredDestinations" />
+      </div>
+      <div class="sm:w-1/5 h-[60svh] sm:h-full overflow-auto no-scrollbar w-full">
+        <DestinationTable :destinations="destinations.filteredDestinations" />
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import Map from '@components/Mapping/Map.vue'
-import DestinationList from '@components/DestinationList.vue'
-import DestinationLayer from '@components/Mapping/MultipleDestinationsLayer.vue'
 import { useDestinationStore } from '@store/Destinations'
 import ImportDestinationDialog from '@components/ImportDestinations/ImportDestinationDialog.vue'
 import FilterBox from '@components/Filters/FilterBox.vue'
 import { useRouter } from 'vue-router'
+import DestinationTable from '@/components/DestinationTable.vue'
 
 const router = useRouter()
 const destinations = useDestinationStore()

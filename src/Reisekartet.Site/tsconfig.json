@@ -10,7 +10,8 @@
         "sourceMap": true,
         "types": [
             "pinia-plugin-persist",
-            "vue3-openlayers"
+            "vue3-openlayers",
+           "@vue-macros/reactivity-transform/macros-global"
         ],
         "baseUrl": ".",
         "paths": {

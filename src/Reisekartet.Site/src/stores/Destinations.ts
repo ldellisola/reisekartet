@@ -28,6 +28,7 @@ export const useDestinationStore = defineStore('Destinations', () => {
       console.error('Bad')
       return
     }
+    data!.destinations.forEach((d) => (d.show = true))
     destinations.value = data!.destinations
 
     await refreshTags()
